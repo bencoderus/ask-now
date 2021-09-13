@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  ask_app:
+    depends_on:
+      - ask_database
+    build: .
+    restart: always
+    ports:
+      - $APP_PORT:$APP_PORT
+    networks:
+      - ask_network
+    env_file: ./.env
+    environment:
+      - MONGO_URI=mongodb://ask_database:27017/ask-now
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+  ask_database:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    networks:
+      - ask_network
+    volumes:
+      - data:/data/db
+
+networks:
+  ask_network:
+
+volumes:
+  data:
+  node_modules:

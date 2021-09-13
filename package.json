@@ -1,0 +1,54 @@
+{
+  "name": "ask-now",
+  "version": "1.0.0",
+  "description": "Get feedbacks on problems",
+  "main": "app",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "jest",
+    "start:prod": "npm run build && node dist/server.js",
+    "start:dev": "nodemon --exec ts-node --files src/server.ts",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "node",
+    "typescript",
+    "mongodb"
+  ],
+  "author": "Benjamin Iduwe",
+  "license": "MIT",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^8.5.5",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.4",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.2.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.1",
+    "@types/mongodb": "^4.0.7",
+    "@types/mongoose": "^5.11.97",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.1.0",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.5"
+  }
+}
