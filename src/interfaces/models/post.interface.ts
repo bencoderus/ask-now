@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import { ObjectId, Document } from 'mongoose';
 
 type ratingType = 'up' | 'down';
 
@@ -7,7 +7,7 @@ interface RatingInterface {
   user: ObjectId;
 }
 
-interface PostInterface {
+interface PostInterface extends Document {
   content: string;
   isFirst: boolean;
   isBestAnswer: boolean;

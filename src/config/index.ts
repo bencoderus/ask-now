@@ -13,5 +13,8 @@ export default {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '3000h',
 
   // MongoDB configurations.
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:270177/ask-now'
+  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:270177/ask-now',
+
+  // Redis configurations.
+  redisUri: process.env.REDIS_URI || 'redis://localhost:6379'
 };
