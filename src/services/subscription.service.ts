@@ -67,4 +67,22 @@ export default class SubscriptionService {
 
     return question;
   }
+
+  public async getAllReceivers(
+    questionId: any,
+    userId?: string
+  ): Promise<any[]> {
+    const question: any = await Question.findById(questionId)
+      .select('subscribers')
+      .lean();
+
+    if (!userId) {
+      return question.subscribers;
+    }
+
+    // filter subscribers where user is not equal to userId.
+    return question.subscribers.filter((subscriber: any) => {
+      return subscriber.user.toString() !== userId;
+    });
+  }
 }

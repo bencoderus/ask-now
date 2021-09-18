@@ -63,10 +63,11 @@ class QuestionController {
 
   public async delete(request: Request, response: Response) {
     const { questionId } = request.params;
+    const { user } = request;
 
-    const question = await this.questionService.delete(questionId, request);
+    await this.questionService.delete(questionId, user);
 
-    return okResponse(response, 'Question deleted successfully', question);
+    return okResponse(response, 'Question deleted successfully');
   }
 }
 

@@ -4,8 +4,15 @@ import PostInterface from '../interfaces/models/post.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
+import NotificationService from './notification.service';
 
 export default class PostService {
+  private notificationService: NotificationService;
+
+  constructor() {
+    this.notificationService = new NotificationService();
+  }
+
   public async findByQuestion(questionId: any): Promise<PostInterface[]> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException(constants.questionNotFound, 404);
@@ -40,7 +47,7 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const post: any = await Post.findById(postId)
+    let post: any = await Post.findById(postId)
       .populate('question')
       .populate('user', 'username firstName lastName');
 
@@ -53,8 +60,11 @@ export default class PostService {
     }
 
     post.isBestAnswer = true;
+    post = await post.save();
 
-    return await post.save();
+    await this.notificationService.sendBestAnswerNotification(post, user);
+
+    return post;
   }
 
   public async create(
@@ -81,6 +91,8 @@ export default class PostService {
     question.posts.push(post);
 
     await question.save();
+
+    await this.notificationService.sendCommentNotification(question, user);
 
     return post;
   }

@@ -9,6 +9,6 @@ process.on('unhandledRejection', (error) => logger.error(error));
 app
   .listen(config.port, async () => {
     await DatabaseManager.connect();
-    console.log(`${config.name} is running on ${config.port} 🚀`);
+    logger.info(`${config.name} is running on ${config.port} 🚀`);
   })
   .on('error', (err) => logger.error(err));

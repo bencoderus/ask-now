@@ -22,7 +22,9 @@ export default class VoteService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const post: any = await Post.findById(postId).populate('question');
+    const post: any = await Post.findById(postId)
+      .populate('question')
+      .populate('user');
 
     if (!post) {
       throw new HttpException(constants.postNotFound, 404);
@@ -47,20 +49,13 @@ export default class VoteService {
       (vote: any) => vote.user.toString() === user.id && vote.type === reversed
     );
 
-    const notificationContent = util.format(
-      constants.notificationContents.votedAnswer,
-      user.username,
-      constants.voteKeys[type],
-      post.question.title
-    );
-
     if (reversedVoted) {
       await Post.updateOne(
         { _id: postId, 'votes._id': reversedVoted._id },
         { $set: { 'votes.$.type': type } }
       );
 
-      this.sendVoteNotification(post.user, notificationContent);
+      await this.notificationService.sendVoteNotification(post, user, type);
 
       return post;
     }
@@ -70,19 +65,9 @@ export default class VoteService {
       { $push: { votes: { type, user: user.id } } }
     );
 
-    this.sendVoteNotification(post.user, notificationContent);
+    await this.notificationService.sendVoteNotification(post, user, type);
 
     return post;
-  }
-
-  private async sendVoteNotification(
-    receiverId: string,
-    content: string
-  ): Promise<void> {
-    await this.notificationService.sendVoteNotification({
-      content: content,
-      receiverId: receiverId
-    });
   }
 
   public async delete(postId: any, user: any): Promise<boolean> {

@@ -1,6 +1,7 @@
 import HttpException from '../exceptions/http.exception';
 import User from '../models/user.model';
 import AuthToken from '../utils/auth-token';
+import constants from '../utils/constants';
 import HashManager from '../utils/hash-manager';
 
 export default class UserService {
@@ -40,13 +41,13 @@ export default class UserService {
     const password = user ? user.password : '';
 
     if (!user) {
-      throw new HttpException('Credentials are invalid', 400);
+      throw new HttpException(constants.invalidCredentials, 400);
     }
 
     const isValid = HashManager.compare(data.password, password);
 
     if (!isValid) {
-      throw new HttpException('Password does not match', 400);
+      throw new HttpException(constants.invalidCredentials, 400);
     }
 
     const { token } = await AuthToken.generateToken(user);
