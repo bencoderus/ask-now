@@ -5,17 +5,13 @@ interface SubscribersInterface extends Types.Subdocument {
   createdAt?: Date | number;
 }
 
-interface PostInterface {
-  posts: ObjectId;
-}
-
 interface QuestionInterface extends Document {
   title: string;
   slug: string;
   tags?: string;
   user: ObjectId;
   subscribers: Types.DocumentArray<SubscribersInterface>;
-  posts: [PostInterface];
+  posts: ObjectId[];
   createdAt?: Date | number;
 }
 

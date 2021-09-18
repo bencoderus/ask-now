@@ -21,7 +21,6 @@ const schema: Schema = new Schema<UserInterface>(
     password: { type: String, required: true },
     notifications: [
       {
-        code: { type: String, unique: true, required: true },
         title: { type: String, required: true },
         content: { type: String, required: true },
         createdAt: { type: Date, default: Date.now }

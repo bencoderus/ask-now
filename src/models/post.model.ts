@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import PostInterface from '../interfaces/models/post.interface';
+import User from './user.model';
 
 const schemaOptions = {
   toJSON: {
@@ -14,11 +15,12 @@ const schemaOptions = {
 const schema = new Schema<PostInterface>(
   {
     content: { type: 'string', required: true },
+    image: { type: 'string' },
     isFirst: { type: 'boolean', default: false },
     isBestAnswer: { type: 'boolean', default: false },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: Schema.Types.ObjectId, ref: User, required: true },
     question: { type: Schema.Types.ObjectId, ref: 'Question', required: true },
-    ratings: [
+    votes: [
       {
         type: { type: 'string', required: true },
         user: { type: Schema.Types.ObjectId, ref: 'User', required: true }

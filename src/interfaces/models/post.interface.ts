@@ -1,19 +1,18 @@
-import { ObjectId, Document } from 'mongoose';
+import { ObjectId, Document, Types } from 'mongoose';
 
-type ratingType = 'up' | 'down';
-
-interface RatingInterface {
-  type: ratingType;
+interface VoteInterface extends Types.Subdocument {
+  type: vote;
   user: ObjectId;
 }
 
 interface PostInterface extends Document {
   content: string;
+  image?: string;
   isFirst: boolean;
   isBestAnswer: boolean;
   user: ObjectId;
   question: ObjectId;
-  ratings: [RatingInterface];
+  votes: [VoteInterface];
   createdAt?: Date | number;
 }
 

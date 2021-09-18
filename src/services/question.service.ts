@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import QuestionInterface from '../interfaces/models/question.interface';
@@ -15,7 +14,7 @@ export default class QuestionService {
     this.subscriptionService = new SubscriptionService();
   }
 
-  async findAll() {
+  async findAll(): Promise<QuestionInterface[]> {
     const questions = await Question.find()
       .sort({ createdAt: -1 })
       .populate('user', 'username firstName lastName');
@@ -23,9 +22,17 @@ export default class QuestionService {
     return questions;
   }
 
-  async findById(id: string) {
+  async findByUserId(user: any): Promise<QuestionInterface[]> {
+    const questions = await Question.find({ user: user.id })
+      .sort({ createdAt: -1 })
+      .populate('user', 'username firstName lastName');
+
+    return questions;
+  }
+
+  async findById(id: string): Promise<QuestionInterface> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Question ID is invalid', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
     const question = await Question.findById(id).populate(
@@ -34,13 +41,13 @@ export default class QuestionService {
     );
 
     if (!question) {
-      throw new HttpException('Question was not found', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
-    return question.toJSON();
+    return question;
   }
 
-  async create(data: any, user: any) {
+  async create(data: any, user: any): Promise<QuestionInterface> {
     const slug = slugify(data.title, true);
 
     const question = await Question.create({
@@ -65,20 +72,22 @@ export default class QuestionService {
     return question;
   }
 
-  async update(questionId: string, request: Request) {
-    const data = request.body;
-
+  async update(
+    questionId: string,
+    data: any,
+    user: any
+  ): Promise<QuestionInterface> {
     if (!isValidObjectId(questionId)) {
-      throw new HttpException('Question ID is invalid', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
     const question: any = await Question.findById(questionId);
 
     if (!question) {
-      throw new HttpException('Question was not found', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
-    if (question.user !== request.user) {
+    if (question.user.toString() !== user.id) {
       throw new HttpException(constants.restrictedAccess, 403);
     }
 
@@ -91,18 +100,18 @@ export default class QuestionService {
     return await question.save();
   }
 
-  async delete(id: any, request: Request) {
+  async delete(id: any, user: any): Promise<boolean> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Question ID is invalid', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
     const question = await Question.findById(id);
 
     if (!question) {
-      throw new HttpException('Question was not found', 404);
+      throw new HttpException(constants.questionNotFound, 404);
     }
 
-    if (question.user !== request.user) {
+    if (question.user.toString() !== user.id) {
       throw new HttpException(constants.restrictedAccess, 403);
     }
 

@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 const schema = Joi.object({
-  post_id: Joi.string().min(1).required()
+  vote: Joi.string().valid('up', 'down')
 });
 
 export default schema;

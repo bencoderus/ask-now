@@ -1,7 +1,6 @@
-import { Date, Document } from 'mongoose';
+import { Date, Document, Types } from 'mongoose';
 
-interface NotificationInterface {
-  code: string;
+interface NotificationInterface extends Types.Subdocument {
   title: string;
   content: string;
   createdAt?: Date;

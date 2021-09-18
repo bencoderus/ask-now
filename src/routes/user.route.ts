@@ -11,4 +11,10 @@ route.get(
   asyncHandler(UserController.profile.bind(UserController))
 );
 
+route.get(
+  '/user/notifications',
+  authUser,
+  asyncHandler(UserController.notification.bind(UserController))
+);
+
 export default route;

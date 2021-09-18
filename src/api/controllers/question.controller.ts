@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import QuestionService from '../../services/question.service';
 import QuestionValidator from '../validators/question-validator';
 import { extractValidationMessage } from '../../utils/helpers';
-import SubscriptionService from '../../services/subscription.service';
 
 class QuestionController {
   private questionService: QuestionService;
@@ -45,6 +44,8 @@ class QuestionController {
 
   public async update(request: Request, response: Response) {
     const { questionId } = request.params;
+    const data = request.body;
+    const { user } = request;
 
     const { error } = QuestionValidator.validate(request.body);
 
@@ -55,7 +56,7 @@ class QuestionController {
       });
     }
 
-    const question = await this.questionService.update(questionId, request);
+    const question = await this.questionService.update(questionId, data, user);
 
     return okResponse(response, 'Question updated successfully', question);
   }

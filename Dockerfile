@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 COPY package*.json .
 
-RUN npm i typescript -g && npm link typescript && yarn
+RUN npm i -g typescript pm2 && npm link typescript && yarn 
 
 EXPOSE 5000
 
