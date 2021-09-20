@@ -1,7 +1,7 @@
+import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import QuestionInterface from '../interfaces/models/question.interface';
 import Question from '../models/question.model';
-import { isValidObjectId } from 'mongoose';
 
 export default class SubscriptionService {
   async subscribe(questionId: any, user: any) {
@@ -35,7 +35,7 @@ export default class SubscriptionService {
 
     question.subscribers.push(subscriptionData);
 
-    return await question.save();
+    return question.save();
   }
 
   async unsubscribe(questionId: any, user: any) {

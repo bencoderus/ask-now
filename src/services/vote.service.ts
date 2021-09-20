@@ -4,7 +4,6 @@ import PostInterface from '../interfaces/models/post.interface';
 import Post from '../models/post.model';
 import constants from '../utils/constants';
 import NotificationService from './notification.service';
-import util from 'util';
 
 export default class VoteService {
   private notificationService: NotificationService;
@@ -30,9 +29,9 @@ export default class VoteService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    // if (post.user.toString() === user.id) {
-    //   throw new HttpException(constants.canNotVoteYourself, 403);
-    // }
+    if (post.user.toString() === user.id) {
+      throw new HttpException(constants.canNotVoteYourself, 403);
+    }
 
     const reversed: string =
       type === constants.votes.up ? constants.votes.down : constants.votes.up;
@@ -81,7 +80,9 @@ export default class VoteService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const hasVoted = post.votes.find((vote) => vote.user == user.id);
+    const hasVoted = post.votes.find(
+      (vote) => vote.user.toString() === user.id
+    );
 
     if (!hasVoted) {
       throw new HttpException(constants.notVoted, 403);

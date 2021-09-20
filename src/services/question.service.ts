@@ -52,7 +52,7 @@ export default class QuestionService {
 
     const question = await Question.create({
       title: data.title,
-      slug: slug,
+      slug,
       tags: data.tags || null,
       user: user.id
     });
@@ -60,7 +60,7 @@ export default class QuestionService {
     const post: any = await Post.create({
       question: question._id,
       content: data.content,
-      isFirstAnswer: true,
+      isFirst: true,
       user: user.id
     });
 
@@ -69,7 +69,7 @@ export default class QuestionService {
 
     await this.subscriptionService.subscribe(question, user);
 
-    return question;
+    return question.populate('posts');
   }
 
   async update(
@@ -97,7 +97,7 @@ export default class QuestionService {
 
     question.posts[0].content = data.content || question.posts[0].content;
 
-    return await question.save();
+    return question.save();
   }
 
   async delete(id: any, user: any): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { isValidObjectId, Query } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import PostInterface from '../interfaces/models/post.interface';
 import Post from '../models/post.model';

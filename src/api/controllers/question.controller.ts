@@ -1,5 +1,5 @@
-import { okResponse, validationErrorResponse } from '../../utils/response';
 import { Request, Response } from 'express';
+import { okResponse, validationErrorResponse } from '../../utils/response';
 import QuestionService from '../../services/question.service';
 import QuestionValidator from '../validators/question-validator';
 import { extractValidationMessage } from '../../utils/helpers';

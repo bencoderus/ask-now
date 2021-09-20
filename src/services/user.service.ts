@@ -1,4 +1,6 @@
+import { LeanDocument } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
+import UserInterface from '../interfaces/models/user.interface';
 import User from '../models/user.model';
 import AuthToken from '../utils/auth-token';
 import constants from '../utils/constants';
@@ -6,7 +8,7 @@ import HashManager from '../utils/hash-manager';
 
 export default class UserService {
   public async createUser(data: any): Promise<{
-    user: any;
+    user: LeanDocument<UserInterface>;
     token: string;
   }> {
     const emailExists = await User.exists({ email: data.email });
@@ -36,17 +38,13 @@ export default class UserService {
     return { user: createdUser.toJSON(), token };
   }
 
-  public async login(data: { email: string; password: string }) {
+  public async login(data: { email: string; password: string }): Promise<{
+    user: LeanDocument<UserInterface>;
+    token: string;
+  }> {
     const user = await User.findOne({ email: data.email });
-    const password = user ? user.password : '';
 
-    if (!user) {
-      throw new HttpException(constants.invalidCredentials, 400);
-    }
-
-    const isValid = HashManager.compare(data.password, password);
-
-    if (!isValid) {
+    if (!(user && HashManager.compare(data.password, user.password))) {
       throw new HttpException(constants.invalidCredentials, 400);
     }
 

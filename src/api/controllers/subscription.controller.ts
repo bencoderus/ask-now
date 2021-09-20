@@ -1,5 +1,5 @@
-import { okResponse } from '../../utils/response';
 import { Request, Response } from 'express';
+import { okResponse } from '../../utils/response';
 import SubscriptionService from '../../services/subscription.service';
 
 class SubscriptionController {
@@ -9,6 +9,14 @@ class SubscriptionController {
     this.subscriptionService = new SubscriptionService();
   }
 
+  /**
+   * Subscribe to a question.
+   *
+   * @param request
+   * @param response
+   *
+   * @returns Promise<Response>
+   */
   public async subscribe(request: Request, response: Response) {
     const { user } = request;
     const { questionId } = request.params;
@@ -18,6 +26,14 @@ class SubscriptionController {
     return okResponse(response, 'Subscription added successfully', question);
   }
 
+  /**
+   * Unsubscribe from a question.
+   *
+   * @param request
+   * @param response
+   *
+   * @returns Promise<Response>
+   */
   public async unsubscribe(request: Request, response: Response) {
     const { user } = request;
     const { questionId } = request.params;

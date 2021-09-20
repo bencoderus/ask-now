@@ -1,5 +1,5 @@
-import config from '../config';
 import { Response, Request } from 'express';
+import config from '../config';
 import logger from './logger';
 import sendResponse from './response/respond';
 
@@ -11,7 +11,7 @@ import sendResponse from './response/respond';
  * @returns boolean
  */
 const isAnException = (statusCode: number): boolean => {
-  return statusCode >= 500 ? true : false;
+  return statusCode >= 500;
 };
 
 /**
@@ -20,17 +20,17 @@ const isAnException = (statusCode: number): boolean => {
  * @returns boolean
  */
 const isProduction = (): boolean => {
-  return config.environment === 'production' ? true : false;
+  return config.environment === 'production';
 };
 
 /**
  * Handle the exception and return the appropriate status code where necessary.
  */
-export default (error: any, request: Request, response: Response) => {
+export default (error: any, request: Request, response: Response): Response => {
   const statusCode = error.statusCode || 500;
 
   const message = isAnException(statusCode)
-    ? 'An error occured'
+    ? 'An error occurred'
     : error.message;
 
   const exception =

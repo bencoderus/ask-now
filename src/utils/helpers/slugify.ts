@@ -1,9 +1,6 @@
 import { generateRandomString } from '../helpers';
 
-const slugify = (
-  title: string,
-  appendRandomString: boolean = false
-): string => {
+const slugify = (title: string, appendRandomString = false): string => {
   if (appendRandomString) {
     const randomString: string = generateRandomString(10);
     title = `${title} + ${randomString}`;

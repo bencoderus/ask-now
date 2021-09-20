@@ -8,6 +8,7 @@ process.on('unhandledRejection', (error) => logger.error(error));
 
 app
   .listen(config.port, async () => {
+    logger.error(`Server started on port ${config.port}`);
     await DatabaseManager.connect();
     logger.info(`${config.name} is running on ${config.port} 🚀`);
   })

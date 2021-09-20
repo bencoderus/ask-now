@@ -17,4 +17,10 @@ route.get(
   asyncHandler(UserController.notification.bind(UserController))
 );
 
+route.patch(
+  '/user/notifications/:notificationId/read',
+  authUser,
+  asyncHandler(UserController.markNotificationAsRead.bind(UserController))
+);
+
 export default route;

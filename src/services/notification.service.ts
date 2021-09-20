@@ -1,17 +1,11 @@
+import util from 'util';
+import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import SubscriptionNotification from '../jobs/subscription.job';
 import User from '../models/user.model';
 import constants from '../utils/constants';
-import SubscriptionService from './subscription.service';
-import util from 'util';
 
 export default class NotificationService {
-  private subscriptionService: SubscriptionService;
-
-  constructor() {
-    this.subscriptionService = new SubscriptionService();
-  }
-
   public async findByUser(userId: any): Promise<any[]> {
     const user: any = await User.findById(userId)
       .select('notifications')
@@ -22,6 +16,39 @@ export default class NotificationService {
     }
 
     return user.notifications;
+  }
+
+  public async markAsRead(notificationId: any, user: any): Promise<boolean> {
+    if (!isValidObjectId(notificationId)) {
+      throw new HttpException(
+        util.format(constants.notFound, 'Notification'),
+        404
+      );
+    }
+
+    const userNotification = await User.findOne({
+      _id: user.id,
+      'notifications._id': notificationId
+    }).select('notifications');
+
+    if (!userNotification) {
+      throw new HttpException(
+        util.format(constants.notFound, 'Notification'),
+        404
+      );
+    }
+
+    await User.updateOne(
+      {
+        _id: user.id,
+        'notifications._id': notificationId
+      },
+      {
+        $set: { 'notifications.$.read': true }
+      }
+    );
+
+    return true;
   }
 
   public async notifyReceiver(
@@ -60,7 +87,7 @@ export default class NotificationService {
       receiverId: post.user.id
     };
 
-    const job = await SubscriptionNotification.add('vote', notificationData);
+    await SubscriptionNotification.add('vote', notificationData);
 
     return true;
   }
@@ -82,7 +109,7 @@ export default class NotificationService {
       userId: user.id
     };
 
-    const job = await SubscriptionNotification.add('comment', notificationData);
+    await SubscriptionNotification.add('comment', notificationData);
 
     return true;
   }
@@ -104,10 +131,7 @@ export default class NotificationService {
       userId: user.id
     };
 
-    const job = await SubscriptionNotification.add(
-      'bestAnswer',
-      notificationData
-    );
+    await SubscriptionNotification.add('bestAnswer', notificationData);
 
     return true;
   }

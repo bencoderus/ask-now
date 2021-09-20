@@ -16,38 +16,57 @@ class AuthController {
     this.userService = new UserService();
   }
 
-  public async register(req: Request, res: Response): Promise<Response> {
-    const data = req.body;
+  /**
+   * Create an account.
+   *
+   * @param request
+   * @param response
+   *
+   * @returns Promise<Response>
+   */
+  public async register(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const data = request.body;
 
     const { error } = RegisterValidator.validate(data);
 
     if (error) {
       const message: string = extractValidationMessage(error);
-      return validationErrorResponse(res, 'Validation error', {
+      return validationErrorResponse(response, 'Validation error', {
         error: message
       });
     }
 
     const userData = await this.userService.createUser(data);
 
-    return createdResponse(res, 'Account created successfully', userData);
+    return createdResponse(response, 'Account created successfully', userData);
   }
 
-  public async login(req: Request, res: Response): Promise<Response> {
-    const data = req.body;
+  /**
+   * Login into user account.
+   *
+   * @param request
+   * @param response
+   *
+   * @returns Promise<Response>
+   */
+  public async login(request: Request, response: Response): Promise<Response> {
+    const data = request.body;
 
     const { error } = LoginValidator.validate(data);
 
     if (error) {
       const message: string = extractValidationMessage(error);
-      return validationErrorResponse(res, 'Validation error', {
+      return validationErrorResponse(response, 'Validation error', {
         error: message
       });
     }
 
     const userData = await this.userService.login(data);
 
-    return okResponse(res, 'Login successful', userData);
+    return okResponse(response, 'Login successful', userData);
   }
 }
 

@@ -5,9 +5,9 @@
   "main": "app",
   "scripts": {
     "build": "tsc -p .",
-    "test": "jest",
-    "start:prod": "npm run build && pm2-runtime start dist/server.js --name app",
-    "start:dev": "nodemon --exec ts-node --files src/server.ts",
+    "test": "cross-env NODE_ENV=testing && jest",
+    "start:prod": "cross-env NODE_ENV=production && npm run build && pm2-runtime start dist/server.js --name app",
+    "start:dev": "cross-env NODE_ENV=development && nodemon --exec ts-node --files src/server.ts",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts"
   },
@@ -24,6 +24,7 @@
     "bcrypt": "^5.0.1",
     "bull": "^3.29.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
@@ -32,6 +33,7 @@
     "mongoose": "^6.0.4",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
+    "sanitize-html": "^2.5.1",
     "ts-node": "^10.2.1",
     "winston": "^3.3.3"
   },

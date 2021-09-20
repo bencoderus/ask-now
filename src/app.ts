@@ -1,8 +1,8 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import routes from './routes/index';
 import morgan from 'morgan';
+import routes from './routes/index';
 
 const app = express();
 

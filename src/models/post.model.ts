@@ -4,8 +4,10 @@ import User from './user.model';
 
 const schemaOptions = {
   toJSON: {
+    virtuals: true,
     transform: function (doc: any, resource: any) {
       resource.id = resource._id;
+      delete resource.votes;
       delete resource.__v;
       delete resource._id;
     }
@@ -30,6 +32,15 @@ const schema = new Schema<PostInterface>(
   },
   schemaOptions
 );
+
+schema.virtual('voteDifference').get(function (this: any) {
+  const downCount = this.votes.reduce((sum: number, vote: any) => {
+    if (vote.type === 'down') sum += 1;
+    return sum;
+  }, 0);
+
+  return this.votes.length - downCount;
+});
 
 const post = model<PostInterface>('Post', schema);
 

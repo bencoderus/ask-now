@@ -1,6 +1,6 @@
 import Bull from 'bull';
-import NotificationService from '../services/notification.service';
 import SubscriptionService from '../services/subscription.service';
+import NotificationService from '../services/notification.service';
 import logger from '../utils/logger';
 
 const SubscriptionNotification = new Bull('subscription-notification');
@@ -11,8 +11,6 @@ SubscriptionNotification.process('vote', async (job) => {
 
   const notificationService = new NotificationService();
   await notificationService.notifyReceiver(receiverId, title, content);
-
-  logger.info(`Vote notification sent`);
 });
 
 // Process comment notification job.
@@ -25,42 +23,50 @@ SubscriptionNotification.process('comment', async (job) => {
     userId
   );
 
-  const notifySubscribers = async (subscribers: any) => {
-    for (const subscriber of subscribers) {
-      const notificationService = new NotificationService();
-      await notificationService.notifyReceiver(subscriber.user, title, content);
-      logger.info(`Notification sent to ${subscriber.user.toString()}`);
-    }
-  };
+  const promises = [];
 
-  await notifySubscribers(subscribers);
+  for (const subscriber of subscribers) {
+    const notificationService = new NotificationService();
+    promises.push(
+      notificationService.notifyReceiver(subscriber.user, title, content)
+    );
+  }
+
+  await Promise.all(promises);
 
   logger.info('Answer notifications sent to subscribers.');
 });
 
 // Process best answer notification job.
 SubscriptionNotification.process('bestAnswer', async (job) => {
-  const { questionId, userId, content, title } = job.data;
+  const { questionId, content, title } = job.data;
 
   const subscriptionService = new SubscriptionService();
   const subscribers: any[] = await subscriptionService.getAllReceivers(
     questionId
   );
 
-  const notifySubscribers = async (subscribers: any) => {
-    for (const subscriber of subscribers) {
-      const notificationService = new NotificationService();
-      await notificationService.notifyReceiver(subscriber.user, title, content);
-      logger.info(`Notification sent to ${subscriber.user.toString()}`);
-    }
-  };
+  const promises = [];
 
-  await notifySubscribers(subscribers);
+  for (const subscriber of subscribers) {
+    const notificationService = new NotificationService();
+    promises.push(
+      notificationService.notifyReceiver(subscriber.user, title, content)
+    );
+  }
+
+  await Promise.all(promises);
 
   logger.info('Best answer notifications sent to subscribers.');
 });
 
-// Log job processing errors
-SubscriptionNotification.on('error', console.error);
+SubscriptionNotification.on('failed', (job, error) => {
+  logger.info(`Unable to send ${job.data.title}`);
+  logger.error(error);
+});
+
+SubscriptionNotification.on('completed', (job) => {
+  logger.info(`${job.data.title} was sent to all the subscribers.`);
+});
 
 export default SubscriptionNotification;

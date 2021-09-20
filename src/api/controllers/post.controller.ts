@@ -1,5 +1,5 @@
-import { okResponse, validationErrorResponse } from '../../utils/response';
 import { Request, Response } from 'express';
+import { okResponse, validationErrorResponse } from '../../utils/response';
 import PostService from '../../services/post.service';
 import { extractValidationMessage } from '../../utils/helpers';
 import CreatePostValidator from '../validators/post/create-validator';
@@ -9,6 +9,7 @@ import VoteService from '../../services/vote.service';
 
 class PostController {
   private postService: PostService;
+
   private voteService: VoteService;
 
   constructor() {
@@ -81,7 +82,7 @@ class PostController {
   }
 
   public async delete(request: Request, response: Response) {
-    const user = request.user;
+    const { user } = request;
     const { postId } = request.params;
 
     await this.postService.delete(postId, user);
@@ -90,7 +91,7 @@ class PostController {
   }
 
   public async vote(request: Request, response: Response) {
-    const user = request.user;
+    const { user } = request;
     const { postId } = request.params;
 
     const data = request.body;
@@ -110,7 +111,7 @@ class PostController {
   }
 
   public async deleteVote(request: Request, response: Response) {
-    const user = request.user;
+    const { user } = request;
     const { postId } = request.params;
 
     await this.voteService.delete(postId, user);

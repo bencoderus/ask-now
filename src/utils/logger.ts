@@ -1,5 +1,21 @@
 import winston from 'winston';
 
+const logDirectory = 'logs';
+
+// Generates a log file name based on the current date and log level.
+const generateLogger = (logLevel = 'log') => {
+  const timestamp: Date = new Date();
+  const [date, month, year] = [
+    timestamp.getDate(),
+    `0${timestamp.getMonth() + 1}`.slice(-2),
+    timestamp.getFullYear()
+  ];
+
+  const dateFormat = `${date}-${month}-${year}`;
+
+  return `${logDirectory}/${logLevel}-${dateFormat}.log`;
+};
+
 const logConfig = {
   transports: [
     new winston.transports.Console({
@@ -10,11 +26,11 @@ const logConfig = {
     }),
     new winston.transports.File({
       level: 'error',
-      filename: 'logs/error.log'
+      filename: generateLogger()
     }),
     new winston.transports.File({
       level: 'debug',
-      filename: 'logs/debug.log'
+      filename: generateLogger()
     })
   ],
   format: winston.format.combine(
