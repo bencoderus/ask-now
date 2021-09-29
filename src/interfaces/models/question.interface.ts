@@ -1,18 +1,18 @@
-import { Document, Types, ObjectId } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { PostInterface } from './post.interface';
+import { UserInterface } from './user.interface';
 
-interface SubscribersInterface extends Types.Subdocument {
+export interface SubscribersInterface extends Types.Subdocument {
   user: string;
   createdAt?: Date | number;
 }
 
-interface QuestionInterface extends Document {
+export interface QuestionInterface extends Document {
   title: string;
   slug: string;
   tags?: string;
-  user: ObjectId;
+  user: UserInterface['_id'];
   subscribers: Types.DocumentArray<SubscribersInterface>;
-  posts: ObjectId[];
+  posts: Types.DocumentArray<PostInterface>;
   createdAt?: Date | number;
 }
-
-export default QuestionInterface;

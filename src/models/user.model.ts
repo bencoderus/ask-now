@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import UserInterface from '../interfaces/models/user.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 
 const schemaOptions = {
   toJSON: {
@@ -32,19 +32,9 @@ const schema: Schema = new Schema<UserInterface>(
   schemaOptions
 );
 
-// schema.methods.notifyUser = async function (title: string, content: string) {
-//   await this.updateOne(
-//     { _id: this._id },
-//     {
-//       $push: {
-//         notifications: {
-//           $each: [{ content, title }],
-//           $sort: { createdAt: -1 }
-//         }
-//       }
-//     }
-//   );
-// };
+schema.methods.getFullName = (user: UserInterface) => {
+  return `${user.firstName} ${user.lastName}`;
+};
 
 const User = model<UserInterface>('User', schema);
 

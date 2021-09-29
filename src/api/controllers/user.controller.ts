@@ -58,16 +58,9 @@ class UserController {
     const { user } = request;
     const { notificationId } = request.params;
 
-    const notifications = await this.notificationService.markAsRead(
-      notificationId,
-      user
-    );
+    await this.notificationService.markAsRead(notificationId, user);
 
-    return okResponse(
-      response,
-      'Notification marked as read successfully',
-      notifications
-    );
+    return okResponse(response, 'Notification marked as read successfully');
   }
 }
 

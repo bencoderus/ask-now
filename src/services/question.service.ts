@@ -1,6 +1,8 @@
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, ObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
-import QuestionInterface from '../interfaces/models/question.interface';
+import { PostInterface } from '../interfaces/models/post.interface';
+import { QuestionInterface } from '../interfaces/models/question.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
@@ -15,19 +17,15 @@ export default class QuestionService {
   }
 
   async findAll(): Promise<QuestionInterface[]> {
-    const questions = await Question.find()
+    return Question.find()
       .sort({ createdAt: -1 })
       .populate('user', 'username firstName lastName');
-
-    return questions;
   }
 
-  async findByUserId(user: any): Promise<QuestionInterface[]> {
-    const questions = await Question.find({ user: user.id })
+  async findByUserId(user: UserInterface): Promise<QuestionInterface[]> {
+    return Question.find({ user: user.id })
       .sort({ createdAt: -1 })
       .populate('user', 'username firstName lastName');
-
-    return questions;
   }
 
   async findById(id: string): Promise<QuestionInterface> {
@@ -47,17 +45,20 @@ export default class QuestionService {
     return question;
   }
 
-  async create(data: any, user: any): Promise<QuestionInterface> {
+  async create(
+    data: Record<string, string>,
+    user: UserInterface
+  ): Promise<QuestionInterface> {
     const slug = slugify(data.title, true);
 
-    const question = await Question.create({
+    const question: QuestionInterface = await Question.create({
       title: data.title,
       slug,
       tags: data.tags || null,
-      user: user.id
+      user: user._id
     });
 
-    const post: any = await Post.create({
+    const post: PostInterface = await Post.create({
       question: question._id,
       content: data.content,
       isFirst: true,
@@ -67,15 +68,15 @@ export default class QuestionService {
     question.posts.push(post);
     await question.save();
 
-    await this.subscriptionService.subscribe(question, user);
+    await this.subscriptionService.subscribe(question.id, user);
 
     return question.populate('posts');
   }
 
   async update(
     questionId: string,
-    data: any,
-    user: any
+    data: Record<string, string>,
+    user: UserInterface
   ): Promise<QuestionInterface> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException(constants.questionNotFound, 404);
@@ -100,7 +101,7 @@ export default class QuestionService {
     return question.save();
   }
 
-  async delete(id: any, user: any): Promise<boolean> {
+  async delete(id: string, user: UserInterface): Promise<boolean> {
     if (!isValidObjectId(id)) {
       throw new HttpException(constants.questionNotFound, 404);
     }
@@ -115,7 +116,7 @@ export default class QuestionService {
       throw new HttpException(constants.restrictedAccess, 403);
     }
 
-    await Post.deleteMany({ question: id });
+    await Post.deleteMany({ question: id as unknown as ObjectId });
 
     await Question.deleteOne({ id });
 

@@ -1,14 +1,13 @@
-import { LeanDocument } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
-import UserInterface from '../interfaces/models/user.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 import User from '../models/user.model';
 import AuthToken from '../utils/auth-token';
 import constants from '../utils/constants';
 import HashManager from '../utils/hash-manager';
 
 export default class UserService {
-  public async createUser(data: any): Promise<{
-    user: LeanDocument<UserInterface>;
+  public async createUser(data: Readonly<Record<string, string>>): Promise<{
+    user: UserInterface;
     token: string;
   }> {
     const emailExists = await User.exists({ email: data.email });
@@ -35,11 +34,11 @@ export default class UserService {
 
     const { token } = await AuthToken.generateToken(createdUser);
 
-    return { user: createdUser.toJSON(), token };
+    return { user: createdUser, token };
   }
 
-  public async login(data: { email: string; password: string }): Promise<{
-    user: LeanDocument<UserInterface>;
+  public async login(data: Record<string, string>): Promise<{
+    user: UserInterface;
     token: string;
   }> {
     const user = await User.findOne({ email: data.email });
@@ -51,7 +50,7 @@ export default class UserService {
     const { token } = await AuthToken.generateToken(user);
 
     return {
-      user: user.toJSON(),
+      user,
       token
     };
   }

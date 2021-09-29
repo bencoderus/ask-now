@@ -1,13 +1,20 @@
 import util from 'util';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, LeanDocument } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import SubscriptionNotification from '../jobs/subscription.job';
 import User from '../models/user.model';
 import constants from '../utils/constants';
+import { vote } from '../types/custom';
+import {
+  NotificationInterface,
+  UserInterface
+} from '../interfaces/models/user.interface';
 
 export default class NotificationService {
-  public async findByUser(userId: any): Promise<any[]> {
-    const user: any = await User.findById(userId)
+  public async findByUser(
+    userId: string
+  ): Promise<LeanDocument<NotificationInterface[]>> {
+    const user: LeanDocument<UserInterface> = await User.findById(userId)
       .select('notifications')
       .lean();
 
@@ -18,7 +25,10 @@ export default class NotificationService {
     return user.notifications;
   }
 
-  public async markAsRead(notificationId: any, user: any): Promise<boolean> {
+  public async markAsRead(
+    notificationId: string,
+    user: UserInterface
+  ): Promise<boolean> {
     if (!isValidObjectId(notificationId)) {
       throw new HttpException(
         util.format(constants.notFound, 'Notification'),
@@ -52,7 +62,7 @@ export default class NotificationService {
   }
 
   public async notifyReceiver(
-    receiverId: any,
+    receiverId: string,
     title: string,
     content: string
   ): Promise<void> {
@@ -71,7 +81,7 @@ export default class NotificationService {
 
   public async sendVoteNotification(
     post: any,
-    user: any,
+    user: UserInterface,
     type: vote
   ): Promise<boolean> {
     const content = util.format(

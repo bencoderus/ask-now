@@ -1,11 +1,14 @@
 import { Schema, model } from 'mongoose';
-import PostInterface from '../interfaces/models/post.interface';
+import {
+  VoteInterface,
+  PostInterface
+} from '../interfaces/models/post.interface';
 import User from './user.model';
 
 const schemaOptions = {
   toJSON: {
     virtuals: true,
-    transform: function (doc: any, resource: any) {
+    transform(doc: any, resource: any) {
       resource.id = resource._id;
       delete resource.votes;
       delete resource.__v;
@@ -33,13 +36,13 @@ const schema = new Schema<PostInterface>(
   schemaOptions
 );
 
-schema.virtual('voteDifference').get(function (this: any) {
-  const downCount = this.votes.reduce((sum: number, vote: any) => {
+schema.virtual('voteDifference').get((post: PostInterface) => {
+  const downCount = post.votes.reduce((sum: number, vote: VoteInterface) => {
     if (vote.type === 'down') sum += 1;
     return sum;
   }, 0);
 
-  return this.votes.length - downCount;
+  return post.votes.length - downCount;
 });
 
 const post = model<PostInterface>('Post', schema);

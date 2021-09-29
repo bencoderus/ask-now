@@ -1,7 +1,9 @@
 import Bull from 'bull';
+import { LeanDocument } from 'mongoose';
 import SubscriptionService from '../services/subscription.service';
 import NotificationService from '../services/notification.service';
 import logger from '../utils/logger';
+import { SubscribersInterface } from '../interfaces/models/question.interface';
 
 const SubscriptionNotification = new Bull('subscription-notification');
 
@@ -18,10 +20,8 @@ SubscriptionNotification.process('comment', async (job) => {
   const { questionId, userId, content, title } = job.data;
 
   const subscriptionService = new SubscriptionService();
-  const subscribers: any[] = await subscriptionService.getAllReceivers(
-    questionId,
-    userId
-  );
+  const subscribers: LeanDocument<SubscribersInterface[]> =
+    await subscriptionService.getAllReceivers(questionId, userId);
 
   const promises = [];
 
@@ -42,9 +42,8 @@ SubscriptionNotification.process('bestAnswer', async (job) => {
   const { questionId, content, title } = job.data;
 
   const subscriptionService = new SubscriptionService();
-  const subscribers: any[] = await subscriptionService.getAllReceivers(
-    questionId
-  );
+  const subscribers: LeanDocument<SubscribersInterface[]> =
+    await subscriptionService.getAllReceivers(questionId);
 
   const promises = [];
 

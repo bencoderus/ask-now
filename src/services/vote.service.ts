@@ -1,9 +1,14 @@
 import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
-import PostInterface from '../interfaces/models/post.interface';
+import {
+  PostInterface,
+  VoteInterface
+} from '../interfaces/models/post.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 import Post from '../models/post.model';
 import constants from '../utils/constants';
 import NotificationService from './notification.service';
+import { vote } from '../types/custom';
 
 export default class VoteService {
   private notificationService: NotificationService;
@@ -13,15 +18,15 @@ export default class VoteService {
   }
 
   public async vote(
-    postId: any,
-    user: any,
+    postId: string,
+    user: UserInterface,
     type: vote
   ): Promise<PostInterface> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const post: any = await Post.findById(postId)
+    const post: PostInterface | null = await Post.findById(postId)
       .populate('question')
       .populate('user');
 
@@ -36,16 +41,18 @@ export default class VoteService {
     const reversed: string =
       type === constants.votes.up ? constants.votes.down : constants.votes.up;
 
-    const alreadyVoted = post.votes.find(
-      (vote: any) => vote.user.toString() === user.id && vote.type === type
+    const alreadyVoted: boolean = post.votes.some(
+      (voteRecord: VoteInterface) =>
+        voteRecord.user.toString() === user.id && voteRecord.type === type
     );
 
     if (alreadyVoted) {
       throw new HttpException(constants.alreadyVoted, 403);
     }
 
-    const reversedVoted = post.votes.find(
-      (vote: any) => vote.user.toString() === user.id && vote.type === reversed
+    const reversedVoted: VoteInterface | undefined = post.votes.find(
+      (voteRecord: VoteInterface) =>
+        voteRecord.user.toString() === user.id && voteRecord.type === reversed
     );
 
     if (reversedVoted) {
@@ -69,7 +76,7 @@ export default class VoteService {
     return post;
   }
 
-  public async delete(postId: any, user: any): Promise<boolean> {
+  public async delete(postId: string, user: UserInterface): Promise<boolean> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
     }
@@ -80,8 +87,8 @@ export default class VoteService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const hasVoted = post.votes.find(
-      (vote) => vote.user.toString() === user.id
+    const hasVoted: boolean = post.votes.some(
+      (voteRecord: VoteInterface) => voteRecord.user.toString() === user.id
     );
 
     if (!hasVoted) {

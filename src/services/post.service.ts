@@ -1,6 +1,7 @@
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, ObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
-import PostInterface from '../interfaces/models/post.interface';
+import { PostInterface } from '../interfaces/models/post.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
@@ -13,19 +14,17 @@ export default class PostService {
     this.notificationService = new NotificationService();
   }
 
-  public async findByQuestion(questionId: any): Promise<PostInterface[]> {
+  public async findByQuestion(questionId: string): Promise<PostInterface[]> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException(constants.questionNotFound, 404);
     }
 
-    const posts: any = await Post.find({
-      question: questionId
+    return Post.find({
+      question: questionId as unknown as ObjectId
     }).populate('user', 'username firstName lastName');
-
-    return posts;
   }
 
-  public async findOne(postId: any): Promise<PostInterface> {
+  public async findOne(postId: string): Promise<PostInterface> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
     }
@@ -40,8 +39,8 @@ export default class PostService {
   }
 
   public async markAsBestAnswer(
-    postId: any,
-    user: any
+    postId: string,
+    user: UserInterface
   ): Promise<PostInterface> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
@@ -68,9 +67,9 @@ export default class PostService {
   }
 
   public async create(
-    questionId: any,
-    data: any,
-    user: any
+    questionId: string,
+    data: Record<string, string>,
+    user: UserInterface
   ): Promise<PostInterface> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException(constants.questionNotFound, 404);
@@ -98,9 +97,9 @@ export default class PostService {
   }
 
   public async update(
-    postId: any,
-    data: any,
-    user: any
+    postId: string,
+    data: Record<string, string>,
+    user: UserInterface
   ): Promise<PostInterface> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
@@ -123,7 +122,7 @@ export default class PostService {
     return post;
   }
 
-  public async delete(postId: any, user: any): Promise<boolean> {
+  public async delete(postId: string, user: UserInterface): Promise<boolean> {
     if (!isValidObjectId(postId)) {
       throw new HttpException(constants.postNotFound, 404);
     }
@@ -146,7 +145,7 @@ export default class PostService {
       { $pull: { posts: post._id } }
     );
 
-    await Post.deleteOne({ _id: postId });
+    await Post.deleteOne({ _id: postId as unknown as ObjectId });
 
     return true;
   }

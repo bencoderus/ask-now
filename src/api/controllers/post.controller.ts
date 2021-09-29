@@ -54,7 +54,7 @@ class PostController {
   }
 
   public async update(request: Request, response: Response) {
-    const user = request.user;
+    const { user } = request;
     const { postId } = request.params;
     const data = request.body;
 

@@ -4,9 +4,12 @@ import logger from './logger';
 
 export default class DatabaseManager {
   public static async connect(): Promise<void> {
+    const connectionUri: string =
+      config.environment === 'test' ? config.testMongoUri : config.mongoUri;
+
     mongoose
-      .connect(config.mongoUri)
-      .then(() => logger.info('Connected to MongoDB'))
+      .connect(connectionUri)
+      .then(() => console.log('Connected to MongoDB'))
       .catch((err: Error) => logger.error(err));
   }
 }

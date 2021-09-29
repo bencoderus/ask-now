@@ -1,10 +1,17 @@
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, LeanDocument } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
-import QuestionInterface from '../interfaces/models/question.interface';
+import {
+  QuestionInterface,
+  SubscribersInterface
+} from '../interfaces/models/question.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
 import Question from '../models/question.model';
 
 export default class SubscriptionService {
-  async subscribe(questionId: any, user: any) {
+  async subscribe(
+    questionId: string,
+    user: UserInterface
+  ): Promise<QuestionInterface> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException('Question ID is invalid', 404);
     }
@@ -34,11 +41,15 @@ export default class SubscriptionService {
     };
 
     question.subscribers.push(subscriptionData);
+    await question.save();
 
-    return question.save();
+    return question;
   }
 
-  async unsubscribe(questionId: any, user: any) {
+  async unsubscribe(
+    questionId: string,
+    user: UserInterface
+  ): Promise<QuestionInterface> {
     if (!isValidObjectId(questionId)) {
       throw new HttpException('Question ID is invalid', 404);
     }
@@ -69,20 +80,26 @@ export default class SubscriptionService {
   }
 
   public async getAllReceivers(
-    questionId: any,
+    questionId: string,
     userId?: string
-  ): Promise<any[]> {
-    const question: any = await Question.findById(questionId)
+  ): Promise<LeanDocument<SubscribersInterface[]>> {
+    const question = await Question.findById(questionId)
       .select('subscribers')
       .lean();
+
+    if (!question) {
+      return [];
+    }
 
     if (!userId) {
       return question.subscribers;
     }
 
     // filter subscribers where user is not equal to userId.
-    return question.subscribers.filter((subscriber: any) => {
-      return subscriber.user.toString() !== userId;
-    });
+    return question.subscribers.filter(
+      (subscriber: LeanDocument<SubscribersInterface>) => {
+        return subscriber.user.toString() !== userId;
+      }
+    );
   }
 }

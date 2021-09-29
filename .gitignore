@@ -29,6 +29,7 @@ dist
 
 # Editors
 .idea
+.vscode
 *.iml
 
 # OS metadata

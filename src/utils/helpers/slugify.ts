@@ -1,4 +1,4 @@
-import { generateRandomString } from '../helpers';
+import { generateRandomString } from '.';
 
 const slugify = (title: string, appendRandomString = false): string => {
   if (appendRandomString) {

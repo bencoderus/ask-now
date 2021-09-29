@@ -1,19 +1,20 @@
 import { ObjectId, Document, Types } from 'mongoose';
+import { vote } from '../../types/custom';
+import { QuestionInterface } from './question.interface';
+import { UserInterface } from './user.interface';
 
-interface VoteInterface extends Types.Subdocument {
+export interface VoteInterface extends Types.Subdocument {
   type: vote;
   user: ObjectId;
 }
 
-interface PostInterface extends Document {
+export interface PostInterface extends Document {
   content: string;
   image?: string;
   isFirst: boolean;
   isBestAnswer: boolean;
-  user: ObjectId;
-  question: ObjectId;
-  votes: [VoteInterface];
+  user: UserInterface['_id'];
+  question: QuestionInterface['_id'];
+  votes: Types.DocumentArray<VoteInterface>;
   createdAt?: Date | number;
 }
-
-export default PostInterface;

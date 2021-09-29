@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '../../utils/auth-token';
 import { unauthorizedResponse } from '../../utils/response';
 
-export default async (req: Request, res: Response, next: NextFunction) => {
+export default async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
   const { authorization } = req.headers;
   const token = authorization && authorization.split(' ')[1];
 

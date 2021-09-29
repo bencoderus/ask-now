@@ -1,11 +1,11 @@
 import { Schema, model } from 'mongoose';
-import QuestionInterface from '../interfaces/models/question.interface';
+import { QuestionInterface } from '../interfaces/models/question.interface';
 import Post from './post.model';
 import User from './user.model';
 
 const schemaOptions = {
   toJSON: {
-    transform: function (doc: any, resource: any) {
+    transform(doc: any, resource: any) {
       resource.id = resource._id;
       if (!doc.populated('subscribers')) {
         delete resource.subscribers;

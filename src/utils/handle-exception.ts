@@ -33,7 +33,7 @@ export default (error: any, request: Request, response: Response): Response => {
     ? 'An error occurred'
     : error.message;
 
-  const exception =
+  const exception: Record<string, any> | null =
     isAnException(statusCode) && !isProduction()
       ? { exception: error.stack }
       : null;
