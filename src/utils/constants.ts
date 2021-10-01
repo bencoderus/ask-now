@@ -8,6 +8,7 @@ export default {
   notVoted: 'You have not voted for this post',
   canNotVoteYourself: 'You can not vote for your post.',
   invalidCredentials: 'Invalid credentials.',
+  bestAnswerAlreadyExists: 'Best answer already selected for this question.',
   notifications: {
     vote: 'Vote notification',
     bestAnswer: 'Best answer notification',

@@ -38,12 +38,13 @@ export default class SubscriptionService {
       );
     }
 
-    const subscriptionData = {
-      user: user.id
-    };
-
-    question.subscribers.push(subscriptionData);
-    await question.save();
+    await question.updateOne({
+      $push: {
+        subscribers: {
+          user: user.id
+        }
+      }
+    });
 
     return question;
   }

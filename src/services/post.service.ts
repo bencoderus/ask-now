@@ -45,7 +45,7 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    let post: PostInterface | null = await Post.findById(postId)
+    const post: PostInterface | null = await Post.findById(postId)
       .populate('question')
       .populate('user', 'username firstName lastName');
 
@@ -53,12 +53,20 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
+    const bestAnswerAlreadyExists: boolean = await Post.exists({
+      question: post.question,
+      bestAnswer: true
+    });
+
+    if (bestAnswerAlreadyExists) {
+      throw new HttpException(constants.bestAnswerAlreadyExists, 400);
+    }
+
     if (post.question.user.toString() !== user.id) {
       throw new HttpException(constants.restrictedAccess, 403);
     }
 
-    post.isBestAnswer = true;
-    post = await post.save();
+    await post.updateOne({ isBestAnswer: true }, { new: true });
 
     await this.notificationService.sendBestAnswerNotification(post, user);
 
@@ -88,9 +96,7 @@ export default class PostService {
       question: questionId
     });
 
-    question.posts.push(post);
-
-    await question.save();
+    await question.updateOne({ $push: { posts: post._id } });
 
     await this.notificationService.sendCommentNotification(question, user);
 
@@ -116,9 +122,7 @@ export default class PostService {
       throw new HttpException(constants.restrictedAccess, 403);
     }
 
-    post.content = data.content || post.content;
-
-    await post.save();
+    await post.updateOne({ content: data.content || post.content });
 
     return post;
   }

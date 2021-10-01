@@ -63,8 +63,7 @@ export default class QuestionService {
       user: user.id
     });
 
-    question.posts.push(post);
-    await question.save();
+    await question.updateOne({ $push: { posts: post._id } });
 
     await this.subscriptionService.subscribe(question.id, user);
 
