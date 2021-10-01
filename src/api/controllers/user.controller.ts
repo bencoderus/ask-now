@@ -1,13 +1,11 @@
+import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import NotificationService from '../../services/notification.service';
 
+@injectable()
 class UserController {
-  private notificationService: NotificationService;
-
-  constructor() {
-    this.notificationService = new NotificationService();
-  }
+  constructor(private readonly notificationService: NotificationService) {}
 
   /**
    * Get all the user data.
@@ -64,4 +62,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default container.resolve(UserController);

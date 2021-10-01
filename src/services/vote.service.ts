@@ -1,3 +1,4 @@
+import { injectable } from 'tsyringe';
 import { isValidObjectId } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import {
@@ -10,12 +11,9 @@ import constants from '../utils/constants';
 import NotificationService from './notification.service';
 import { vote } from '../types/custom';
 
+@injectable()
 export default class VoteService {
-  private notificationService: NotificationService;
-
-  constructor() {
-    this.notificationService = new NotificationService();
-  }
+  constructor(private notificationService: NotificationService) {}
 
   public async vote(
     postId: string,

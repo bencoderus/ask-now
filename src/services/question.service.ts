@@ -1,4 +1,5 @@
 import { isValidObjectId, ObjectId } from 'mongoose';
+import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import { PostInterface } from '../interfaces/models/post.interface';
 import { QuestionInterface } from '../interfaces/models/question.interface';
@@ -9,12 +10,9 @@ import constants from '../utils/constants';
 import { slugify } from '../utils/helpers';
 import SubscriptionService from './subscription.service';
 
+@injectable()
 export default class QuestionService {
-  private subscriptionService: SubscriptionService;
-
-  constructor() {
-    this.subscriptionService = new SubscriptionService();
-  }
+  constructor(private readonly subscriptionService: SubscriptionService) {}
 
   async findAll(): Promise<QuestionInterface[]> {
     return Question.find()
@@ -55,7 +53,7 @@ export default class QuestionService {
       title: data.title,
       slug,
       tags: data.tags || null,
-      user: user._id
+      user: user.id
     });
 
     const post: PostInterface = await Post.create({
@@ -82,7 +80,9 @@ export default class QuestionService {
       throw new HttpException(constants.questionNotFound, 404);
     }
 
-    const question: any = await Question.findById(questionId);
+    const question: QuestionInterface | null = await Question.findById(
+      questionId
+    );
 
     if (!question) {
       throw new HttpException(constants.questionNotFound, 404);

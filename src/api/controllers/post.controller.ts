@@ -1,3 +1,4 @@
+import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse, validationErrorResponse } from '../../utils/response';
 import PostService from '../../services/post.service';
@@ -7,17 +8,14 @@ import VoteValidator from '../validators/vote-validator';
 import UpdatePostValidator from '../validators/post/update-validator';
 import VoteService from '../../services/vote.service';
 
+@injectable()
 class PostController {
-  private postService: PostService;
+  constructor(
+    private readonly postService: PostService,
+    private readonly voteService: VoteService
+  ) {}
 
-  private voteService: VoteService;
-
-  constructor() {
-    this.postService = new PostService();
-    this.voteService = new VoteService();
-  }
-
-  public async index(request: Request, response: Response) {
+  public async index(request: Request, response: Response): Promise<Response> {
     const { questionId } = request.params;
 
     const post = await this.postService.findByQuestion(questionId);
@@ -25,7 +23,7 @@ class PostController {
     return okResponse(response, 'Posts retrieved successfully', post);
   }
 
-  public async show(request: Request, response: Response) {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { postId } = request.params;
 
     const post = await this.postService.findOne(postId);
@@ -33,7 +31,7 @@ class PostController {
     return okResponse(response, 'Post retrieved successfully', post);
   }
 
-  public async create(request: Request, response: Response) {
+  public async create(request: Request, response: Response): Promise<Response> {
     const { user } = request;
     const { questionId } = request.params;
 
@@ -53,7 +51,7 @@ class PostController {
     return okResponse(response, 'Post created successfully', post);
   }
 
-  public async update(request: Request, response: Response) {
+  public async update(request: Request, response: Response): Promise<Response> {
     const { user } = request;
     const { postId } = request.params;
     const data = request.body;
@@ -72,7 +70,10 @@ class PostController {
     return okResponse(response, 'Post updated successfully', post);
   }
 
-  public async markAsBestAnswer(request: Request, response: Response) {
+  public async markAsBestAnswer(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const { user } = request;
     const { postId } = request.params;
 
@@ -81,7 +82,7 @@ class PostController {
     return okResponse(response, 'Best answer selected successfully', post);
   }
 
-  public async delete(request: Request, response: Response) {
+  public async delete(request: Request, response: Response): Promise<Response> {
     const { user } = request;
     const { postId } = request.params;
 
@@ -90,7 +91,7 @@ class PostController {
     return okResponse(response, 'Post removed successfully');
   }
 
-  public async vote(request: Request, response: Response) {
+  public async vote(request: Request, response: Response): Promise<Response> {
     const { user } = request;
     const { postId } = request.params;
 
@@ -110,7 +111,10 @@ class PostController {
     return okResponse(response, 'Voted successfully');
   }
 
-  public async deleteVote(request: Request, response: Response) {
+  public async deleteVote(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const { user } = request;
     const { postId } = request.params;
 
@@ -120,4 +124,4 @@ class PostController {
   }
 }
 
-export default new PostController();
+export default container.resolve(PostController);

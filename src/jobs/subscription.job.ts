@@ -4,8 +4,11 @@ import SubscriptionService from '../services/subscription.service';
 import NotificationService from '../services/notification.service';
 import logger from '../utils/logger';
 import { SubscribersInterface } from '../interfaces/models/question.interface';
+import config from '../config';
 
-const SubscriptionNotification = new Bull('subscription-notification');
+const SubscriptionNotification = new Bull('subscription-notification', {
+  redis: config.redisUri
+});
 
 // Process vote notification job.
 SubscriptionNotification.process('vote', async (job) => {

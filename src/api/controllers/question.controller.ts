@@ -1,23 +1,21 @@
+import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse, validationErrorResponse } from '../../utils/response';
 import QuestionService from '../../services/question.service';
 import QuestionValidator from '../validators/question-validator';
 import { extractValidationMessage } from '../../utils/helpers';
 
+@injectable()
 class QuestionController {
-  private questionService: QuestionService;
+  constructor(private readonly questionService: QuestionService) {}
 
-  constructor() {
-    this.questionService = new QuestionService();
-  }
-
-  public async index(request: Request, response: Response) {
+  public async index(request: Request, response: Response): Promise<Response> {
     const questions = await this.questionService.findAll();
 
     return okResponse(response, 'Questions retrieved successfully', questions);
   }
 
-  public async show(request: Request, response: Response) {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { questionId } = request.params;
 
     const question = await this.questionService.findById(questionId);
@@ -25,7 +23,7 @@ class QuestionController {
     return okResponse(response, 'Questions retrieved successfully', question);
   }
 
-  public async create(request: Request, response: Response) {
+  public async create(request: Request, response: Response): Promise<Response> {
     const data = request.body;
 
     const { error } = QuestionValidator.validate(data);
@@ -42,7 +40,7 @@ class QuestionController {
     return okResponse(response, 'Question created successfully', question);
   }
 
-  public async update(request: Request, response: Response) {
+  public async update(request: Request, response: Response): Promise<Response> {
     const { questionId } = request.params;
     const data = request.body;
     const { user } = request;
@@ -61,7 +59,7 @@ class QuestionController {
     return okResponse(response, 'Question updated successfully', question);
   }
 
-  public async delete(request: Request, response: Response) {
+  public async delete(request: Request, response: Response): Promise<Response> {
     const { questionId } = request.params;
     const { user } = request;
 
@@ -71,4 +69,4 @@ class QuestionController {
   }
 }
 
-export default new QuestionController();
+export default container.resolve(QuestionController);

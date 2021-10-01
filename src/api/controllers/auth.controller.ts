@@ -1,3 +1,4 @@
+import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import UserService from '../../services/user.service';
 import { extractValidationMessage } from '../../utils/helpers';
@@ -9,12 +10,9 @@ import {
 import RegisterValidator from '../validators/auth/register-validator';
 import LoginValidator from '../validators/auth/login-validator';
 
+@injectable()
 class AuthController {
-  private userService: UserService;
-
-  constructor() {
-    this.userService = new UserService();
-  }
+  constructor(private readonly userService: UserService) {}
 
   /**
    * Create an account.
@@ -70,4 +68,4 @@ class AuthController {
   }
 }
 
-export default new AuthController();
+export default container.resolve(AuthController);

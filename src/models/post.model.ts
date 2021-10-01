@@ -37,6 +37,10 @@ const schema = new Schema<PostInterface>(
 );
 
 schema.virtual('voteDifference').get((post: PostInterface) => {
+  if (!post) {
+    return 0;
+  }
+
   const downCount = post.votes.reduce((sum: number, vote: VoteInterface) => {
     if (vote.type === 'down') sum += 1;
     return sum;

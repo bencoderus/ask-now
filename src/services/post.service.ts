@@ -1,18 +1,17 @@
 import { isValidObjectId, ObjectId } from 'mongoose';
+import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import { PostInterface } from '../interfaces/models/post.interface';
+import { QuestionInterface } from '../interfaces/models/question.interface';
 import { UserInterface } from '../interfaces/models/user.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
 import NotificationService from './notification.service';
 
+@injectable()
 export default class PostService {
-  private notificationService: NotificationService;
-
-  constructor() {
-    this.notificationService = new NotificationService();
-  }
+  constructor(private readonly notificationService: NotificationService) {}
 
   public async findByQuestion(questionId: string): Promise<PostInterface[]> {
     if (!isValidObjectId(questionId)) {
@@ -46,7 +45,7 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    let post: any = await Post.findById(postId)
+    let post: PostInterface | null = await Post.findById(postId)
       .populate('question')
       .populate('user', 'username firstName lastName');
 
@@ -75,7 +74,9 @@ export default class PostService {
       throw new HttpException(constants.questionNotFound, 404);
     }
 
-    const question: any = await Question.findById(questionId);
+    const question: QuestionInterface | null = await Question.findById(
+      questionId
+    );
 
     if (!question) {
       throw new HttpException(constants.questionNotFound, 404);
@@ -105,7 +106,7 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const post: any = await Post.findById(postId);
+    const post: PostInterface | null = await Post.findById(postId);
 
     if (!post) {
       throw new HttpException(constants.postNotFound, 404);
@@ -127,7 +128,7 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const post: any = await Post.findById(postId).populate(
+    const post: PostInterface | null = await Post.findById(postId).populate(
       'user',
       'username firstName lastName'
     );

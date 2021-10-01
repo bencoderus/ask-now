@@ -1,13 +1,11 @@
+import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import SubscriptionService from '../../services/subscription.service';
 
+@injectable()
 class SubscriptionController {
-  private subscriptionService: SubscriptionService;
-
-  constructor() {
-    this.subscriptionService = new SubscriptionService();
-  }
+  constructor(private readonly subscriptionService: SubscriptionService) {}
 
   /**
    * Subscribe to a question.
@@ -47,4 +45,4 @@ class SubscriptionController {
   }
 }
 
-export default new SubscriptionController();
+export default container.resolve(SubscriptionController);

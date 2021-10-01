@@ -1,4 +1,5 @@
 import { isValidObjectId, LeanDocument } from 'mongoose';
+import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import {
   QuestionInterface,
@@ -7,6 +8,7 @@ import {
 import { UserInterface } from '../interfaces/models/user.interface';
 import Question from '../models/question.model';
 
+@injectable()
 export default class SubscriptionService {
   async subscribe(
     questionId: string,

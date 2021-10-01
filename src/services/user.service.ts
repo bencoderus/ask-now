@@ -1,3 +1,4 @@
+import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import {
   BaseUserInterface,
@@ -9,6 +10,7 @@ import AuthToken from '../utils/auth-token';
 import constants from '../utils/constants';
 import HashManager from '../utils/hash-manager';
 
+@injectable()
 export default class UserService {
   public async createUser(data: BaseUserInterface): Promise<UserInterface> {
     const emailExists = await User.exists({ email: data.email });
