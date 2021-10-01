@@ -106,7 +106,7 @@ export default class QuestionService {
       throw new HttpException(constants.questionNotFound, 404);
     }
 
-    const question = await Question.findById(id);
+    const question: QuestionInterface | null = await Question.findById(id);
 
     if (!question) {
       throw new HttpException(constants.questionNotFound, 404);

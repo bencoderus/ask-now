@@ -8,13 +8,16 @@ export interface VoteInterface extends Types.Subdocument {
   user: ObjectId;
 }
 
-export interface PostInterface extends Document {
+export interface BasePostInterface {
   content: string;
   image?: string;
   isFirst: boolean;
   isBestAnswer: boolean;
   user: UserInterface['_id'];
   question: QuestionInterface['_id'];
+}
+
+export interface PostInterface extends Document, BasePostInterface {
   votes: Types.DocumentArray<VoteInterface>;
   createdAt?: Date | number;
 }

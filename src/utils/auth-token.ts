@@ -1,12 +1,13 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
+import { UserInterface } from '../interfaces/models/user.interface';
 
 const { jwtSecret } = config;
 const { jwtExpiresIn } = config;
 
 export default class AuthToken {
-  public static async generateToken(payload: any): Promise<{
-    payload: any;
+  public static async generateToken(payload: UserInterface): Promise<{
+    payload: UserInterface;
     token: string;
   }> {
     try {
@@ -25,7 +26,7 @@ export default class AuthToken {
     decoded: any;
   }> {
     try {
-      const decoded = jwt.verify(token, jwtSecret);
+      const decoded: JwtPayload | string = jwt.verify(token, jwtSecret);
       return { verified: true, decoded };
     } catch (error) {
       return { verified: false, decoded: null };

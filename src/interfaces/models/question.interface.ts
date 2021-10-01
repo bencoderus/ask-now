@@ -7,11 +7,14 @@ export interface SubscribersInterface extends Types.Subdocument {
   createdAt?: Date | number;
 }
 
-export interface QuestionInterface extends Document {
+export interface BaseQuestionInterface {
   title: string;
   slug: string;
   tags?: string;
   user: UserInterface['_id'];
+}
+
+export interface QuestionInterface extends Document, BaseQuestionInterface {
   subscribers: Types.DocumentArray<SubscribersInterface>;
   posts: Types.DocumentArray<PostInterface>;
   createdAt?: Date | number;

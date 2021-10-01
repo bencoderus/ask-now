@@ -1,15 +1,16 @@
 import HttpException from '../exceptions/http.exception';
-import { UserInterface } from '../interfaces/models/user.interface';
+import {
+  BaseUserInterface,
+  UserInterface,
+  UserLoginInterface
+} from '../interfaces/models/user.interface';
 import User from '../models/user.model';
 import AuthToken from '../utils/auth-token';
 import constants from '../utils/constants';
 import HashManager from '../utils/hash-manager';
 
 export default class UserService {
-  public async createUser(data: Readonly<Record<string, string>>): Promise<{
-    user: UserInterface;
-    token: string;
-  }> {
+  public async createUser(data: BaseUserInterface): Promise<UserInterface> {
     const emailExists = await User.exists({ email: data.email });
 
     if (emailExists) {
@@ -24,20 +25,16 @@ export default class UserService {
 
     const hashed = HashManager.hash(data.password);
 
-    const createdUser = await User.create({
+    return User.create({
       firstName: data.firstName,
       lastName: data.lastName,
       username: data.username,
       email: data.email,
       password: hashed
     });
-
-    const { token } = await AuthToken.generateToken(createdUser);
-
-    return { user: createdUser, token };
   }
 
-  public async login(data: Record<string, string>): Promise<{
+  public async login(data: UserLoginInterface): Promise<{
     user: UserInterface;
     token: string;
   }> {
