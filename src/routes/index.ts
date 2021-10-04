@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import express, { Request, Response, NextFunction } from 'express';
 import handleException from '../utils/handle-exception';
-import { notFoundResponse } from '../utils/response';
+import { notFoundResponse, okResponse } from '../utils/response';
 import authRoutes from './auth.route';
 import userRoutes from './user.route';
 import questionRoutes from './question.route';
@@ -20,6 +20,10 @@ route.use(
     return handleException(error, request, response);
   }
 );
+
+route.get('/', (request: Request, response: Response) => {
+  return okResponse(response, 'Ask now version 1.0.0');
+});
 
 route.use((req: Request, res: Response, next: NextFunction) => {
   return notFoundResponse(res, 'Resource was not found');

@@ -62,11 +62,13 @@ SubscriptionNotification.process('bestAnswer', async (job) => {
   logger.info('Best answer notifications sent to subscribers.');
 });
 
+// Log all errors.
 SubscriptionNotification.on('failed', (job, error) => {
   logger.info(`Unable to send ${job.data.title}`);
   logger.error(error);
 });
 
+// Log notification sent.
 SubscriptionNotification.on('completed', (job) => {
   logger.info(`${job.data.title} was sent to all the subscribers.`);
 });

@@ -6,6 +6,7 @@ const schemaOptions = {
     transform(doc: any, resource: any) {
       resource.id = resource._id;
       delete resource.password;
+      delete resource.notifications;
       delete resource.__v;
       delete resource._id;
     }

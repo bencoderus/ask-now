@@ -5,7 +5,7 @@
   "main": "app",
   "scripts": {
     "build": "tsc -p .",
-    "test": "cross-env NODE_ENV=testing && jest",
+    "test": "cross-env NODE_ENV=testing && jest --maxWorkers=8",
     "start:prod": "cross-env NODE_ENV=production && npm run build && pm2-runtime start dist/server.js --name app",
     "start:dev": "cross-env NODE_ENV=development && nodemon --exec ts-node --files src/server.ts",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -30,6 +30,7 @@
     "helmet": "^4.6.0",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
+    "mongodb-memory-server": "^7.4.2",
     "mongoose": "^6.0.4",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
@@ -48,6 +49,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",
+    "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "eslint": "^7.29.0",
@@ -59,6 +61,7 @@
     "faker": "^5.5.3",
     "jest": "^27.1.0",
     "prettier": "^2.3.2",
+    "supertest": "^6.1.6",
     "ts-jest": "^27.0.5"
   }
 }

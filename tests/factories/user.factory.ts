@@ -4,20 +4,25 @@ import UserService from '../../src/services/user.service';
 import HashManager from '../../src/utils/hash-manager';
 
 export default class UserFactory {
-  static async create(): Promise<UserInterface> {
+  static async create(
+    data: Record<string, string> = {}
+  ): Promise<UserInterface> {
     const service = new UserService();
+    const { firstName, lastName, username, email, password } = data;
 
     return service.createUser({
-      firstName: faker.unique.name,
-      lastName: faker.unique.name,
-      email: faker.internet.email(),
-      username: faker.internet.userName(),
-      password: HashManager.hash('password')
+      firstName: firstName ?? faker.unique.name,
+      lastName: lastName ?? faker.unique.name,
+      email: email ?? faker.internet.email(),
+      username: username ?? faker.internet.userName(),
+      password: password ?? HashManager.hash('password')
     });
   }
 
-  static async login(): Promise<{ user: UserInterface; token: string }> {
-    const user: UserInterface = await this.create();
+  static async login(
+    data: Record<string, string> = {}
+  ): Promise<{ user: UserInterface; token: string }> {
+    const user: UserInterface = await this.create(data);
 
     const service = new UserService();
 

@@ -1,14 +1,16 @@
 import app from './app';
 import config from './config';
 import logger from './utils/logger';
-import DatabaseManager from './utils/database-manger';
+import DatabaseFactory from './utils/databases/factory';
 
 process.on('uncaughtException', (error) => logger.error(error));
 process.on('unhandledRejection', (error) => logger.error(error));
 
 app
   .listen(config.port, async () => {
-    await DatabaseManager.connect();
+    const database = new DatabaseFactory();
+    await database.connect();
+
     console.log(`${config.name} is running on ${config.port} 🚀`);
   })
   .on('error', (err) => logger.error(err));
