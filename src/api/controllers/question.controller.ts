@@ -1,16 +1,15 @@
 import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
-import { okResponse, validationErrorResponse } from '../../utils/response';
+import { okResponse } from '../../utils/response';
 import QuestionService from '../../services/question.service';
-import QuestionValidator from '../validators/question-validator';
-import { extractValidationMessage } from '../../utils/helpers';
 
 @injectable()
 class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   public async index(request: Request, response: Response): Promise<Response> {
-    const questions = await this.questionService.findAll();
+    const { query } = request;
+    const questions = await this.questionService.findAll(query);
 
     return okResponse(response, 'Questions retrieved successfully', questions);
   }
@@ -26,15 +25,6 @@ class QuestionController {
   public async create(request: Request, response: Response): Promise<Response> {
     const data = request.body;
 
-    const { error } = QuestionValidator.validate(data);
-
-    if (error) {
-      const message: string = extractValidationMessage(error);
-      return validationErrorResponse(response, 'Validation error', {
-        error: message
-      });
-    }
-
     const question = await this.questionService.create(data, request.user);
 
     return okResponse(response, 'Question created successfully', question);
@@ -44,15 +34,6 @@ class QuestionController {
     const { questionId } = request.params;
     const data = request.body;
     const { user } = request;
-
-    const { error } = QuestionValidator.validate(request.body);
-
-    if (error) {
-      const message: string = extractValidationMessage(error);
-      return validationErrorResponse(response, 'Validation error', {
-        error: message
-      });
-    }
 
     const question = await this.questionService.update(questionId, data, user);
 

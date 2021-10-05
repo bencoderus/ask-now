@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../../utils/auth-token';
 import { unauthorizedResponse } from '../../utils/response';

@@ -1,14 +1,7 @@
 import { container, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import UserService from '../../services/user.service';
-import { extractValidationMessage } from '../../utils/helpers';
-import {
-  createdResponse,
-  okResponse,
-  validationErrorResponse
-} from '../../utils/response';
-import RegisterValidator from '../validators/auth/register-validator';
-import LoginValidator from '../validators/auth/login-validator';
+import { createdResponse, okResponse } from '../../utils/response';
 
 @injectable()
 class AuthController {
@@ -28,15 +21,6 @@ class AuthController {
   ): Promise<Response> {
     const data = request.body;
 
-    const { error } = RegisterValidator.validate(data);
-
-    if (error) {
-      const message: string = extractValidationMessage(error);
-      return validationErrorResponse(response, 'Validation error', {
-        error: message
-      });
-    }
-
     const userData = await this.userService.createUser(data);
 
     return createdResponse(response, 'Account created successfully', userData);
@@ -52,15 +36,6 @@ class AuthController {
    */
   public async login(request: Request, response: Response): Promise<Response> {
     const data = request.body;
-
-    const { error } = LoginValidator.validate(data);
-
-    if (error) {
-      const message: string = extractValidationMessage(error);
-      return validationErrorResponse(response, 'Validation error', {
-        error: message
-      });
-    }
 
     const userData = await this.userService.login(data);
 

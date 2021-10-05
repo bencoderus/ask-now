@@ -4,29 +4,59 @@ import HttpException from '../exceptions/http.exception';
 import { PostInterface } from '../interfaces/models/post.interface';
 import { QuestionInterface } from '../interfaces/models/question.interface';
 import { UserInterface } from '../interfaces/models/user.interface';
+import Pagination from '../interfaces/pagination.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
 import { slugify } from '../utils/helpers';
+import paginator from '../utils/paginator';
 import SubscriptionService from './subscription.service';
 
 @injectable()
 export default class QuestionService {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  async findAll(): Promise<QuestionInterface[]> {
-    return Question.find()
-      .sort({ createdAt: -1 })
-      .populate('user', 'username firstName lastName');
+  private buildFilter(query: Record<string, any> = {}) {
+    const filter: Record<string, any> = {};
+
+    if (query.user) {
+      filter.user = {
+        $in: query.user.split(',').map((id: string) => id.trim())
+      };
+    }
+
+    if (query.tags) {
+      filter.tags = query.tags;
+    }
+
+    return filter;
   }
 
-  async findByUserId(user: UserInterface): Promise<QuestionInterface[]> {
-    return Question.find({ user: user.id })
+  public async findAll(
+    query: Record<string, any> = {}
+  ): Promise<Pagination<QuestionInterface>> {
+    const filtered = this.buildFilter(query);
+    const total: number = await Question.find(filtered).countDocuments();
+    const { page, limit, skip, pageCount } = paginator(total, query);
+
+    console.log(filtered);
+
+    const records = await Question.find(filtered)
       .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip)
       .populate('user', 'username firstName lastName');
+
+    return {
+      page,
+      pageCount,
+      limit,
+      total,
+      records
+    };
   }
 
-  async findById(id: string): Promise<QuestionInterface> {
+  public async findById(id: string): Promise<QuestionInterface> {
     if (!isValidObjectId(id)) {
       throw new HttpException(constants.questionNotFound, 404);
     }
@@ -43,7 +73,7 @@ export default class QuestionService {
     return question;
   }
 
-  async create(
+  public async create(
     data: Record<string, string>,
     user: UserInterface
   ): Promise<QuestionInterface> {
@@ -70,7 +100,7 @@ export default class QuestionService {
     return question.populate('posts');
   }
 
-  async update(
+  public async update(
     questionId: string,
     data: Record<string, string>,
     user: UserInterface
@@ -100,7 +130,7 @@ export default class QuestionService {
     return question.save();
   }
 
-  async delete(id: string, user: UserInterface): Promise<boolean> {
+  public async delete(id: string, user: UserInterface): Promise<boolean> {
     if (!isValidObjectId(id)) {
       throw new HttpException(constants.questionNotFound, 404);
     }
