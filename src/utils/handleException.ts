@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import config from '../config';
-import logger from './logger';
+import logger from './logger.util';
 import sendResponse from './response/respond';
 
 /**

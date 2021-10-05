@@ -1,7 +1,7 @@
 import config from '../../config';
 import DatabaseInterface from '../../interfaces/database.interface';
 import Mongo from './mongo';
-import MongoMemory from './mongo-memory';
+import MongoMemory from './mongoMemory';
 
 export default class DatabaseFactory {
   public DatabaseDriver: DatabaseInterface;

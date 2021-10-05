@@ -1,10 +1,10 @@
 import express from 'express';
 import PostController from '../api/controllers/post.controller';
-import asyncHandler from '../utils/async-handler';
+import asyncHandler from '../utils/asyncHandler';
 import authUser from '../api/middlewares/auth-user.middleware';
 import CreatePostValidator from '../api/validators/post/create-validator';
 import UpdatePostValidator from '../api/validators/post/update-validator';
-import VoteValidator from '../api/validators/vote-validator';
+import VoteValidator from '../api/validators/voteValidator';
 import validator from '../api/middlewares/validation-handler';
 
 const route = express.Router();

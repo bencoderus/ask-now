@@ -1,5 +1,5 @@
 import SubscriptionNotification from '../jobs/subscription.job';
-import DatabaseFactory from './databases/factory';
+import DatabaseFactory from '../utils/databases/factory';
 
 export default class TestService {
   private readonly database: DatabaseFactory;

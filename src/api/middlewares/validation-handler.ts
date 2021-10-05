@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Response, Request } from 'express';
 import { ObjectSchema } from 'joi';
-import { extractValidationMessage } from '../../utils/helpers';
+import { extractValidationMessage } from '../../utils/string.util';
 import { validationErrorResponse } from '../../utils/response';
 
 /**

@@ -1,9 +1,9 @@
 import express from 'express';
-import asyncHandler from '../utils/async-handler';
+import asyncHandler from '../utils/asyncHandler';
 import authUser from '../api/middlewares/auth-user.middleware';
 import QuestionController from '../api/controllers/question.controller';
 import SubscriptionController from '../api/controllers/subscription.controller';
-import QuestionValidator from '../api/validators/question-validator';
+import QuestionValidator from '../api/validators/questionValidator';
 import validator from '../api/middlewares/validation-handler';
 
 const route = express.Router();

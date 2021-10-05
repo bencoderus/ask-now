@@ -1,13 +1,13 @@
 import okResponse from './responses/ok';
 import createdResponse from './responses/created';
-import badRequestResponse from './responses/bad-request';
+import badRequestResponse from './responses/badRequest';
 import forbiddenResponse from './responses/forbidden';
-import notFoundResponse from './responses/not-found';
+import notFoundResponse from './responses/notFound';
 import validationErrorResponse from './responses/validation';
-import serverErrorResponse from './responses/server-error';
-import serviceUnavailableResponse from './responses/service-unavailable';
+import serverErrorResponse from './responses/serverError';
+import serviceUnavailableResponse from './responses/serviceUnavailable';
 import unauthorizedResponse from './responses/unauthorized';
-import sendResponse from './responses/send-response';
+import sendResponse from './responses/sendResponse';
 
 export {
   okResponse,

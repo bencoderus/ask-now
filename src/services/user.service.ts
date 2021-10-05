@@ -6,9 +6,9 @@ import {
   UserLoginInterface
 } from '../interfaces/models/user.interface';
 import User from '../models/user.model';
-import AuthToken from '../utils/auth-token';
+import AuthToken from '../utils/authToken';
 import constants from '../utils/constants';
-import HashManager from '../utils/hash-manager';
+import HashManager from '../utils/hashManager';
 
 @injectable()
 export default class UserService {

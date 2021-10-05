@@ -1,6 +1,6 @@
 import express from 'express';
 import UserController from '../api/controllers/user.controller';
-import asyncHandler from '../utils/async-handler';
+import asyncHandler from '../utils/asyncHandler';
 import authUser from '../api/middlewares/auth-user.middleware';
 
 const route = express.Router();

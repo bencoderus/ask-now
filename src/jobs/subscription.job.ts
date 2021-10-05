@@ -2,7 +2,7 @@ import Bull from 'bull';
 import { LeanDocument } from 'mongoose';
 import SubscriptionService from '../services/subscription.service';
 import NotificationService from '../services/notification.service';
-import logger from '../utils/logger';
+import logger from '../utils/logger.util';
 import { SubscribersInterface } from '../interfaces/models/question.interface';
 import config from '../config';
 

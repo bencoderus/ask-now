@@ -1,6 +1,6 @@
 import app from './app';
 import config from './config';
-import logger from './utils/logger';
+import logger from './utils/logger.util';
 import DatabaseFactory from './utils/databases/factory';
 
 process.on('uncaughtException', (error) => logger.error(error));

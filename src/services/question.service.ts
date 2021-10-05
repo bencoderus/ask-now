@@ -8,8 +8,8 @@ import Pagination from '../interfaces/pagination.interface';
 import Post from '../models/post.model';
 import Question from '../models/question.model';
 import constants from '../utils/constants';
-import { slugify } from '../utils/helpers';
-import paginator from '../utils/paginator';
+import { slugify } from '../utils/string.util';
+import paginator from '../utils/paginator.util';
 import SubscriptionService from './subscription.service';
 
 @injectable()

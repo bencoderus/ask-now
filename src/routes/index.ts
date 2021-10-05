@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import express, { Request, Response, NextFunction } from 'express';
-import handleException from '../utils/handle-exception';
+import handleException from '../utils/handleException';
 import { notFoundResponse, okResponse } from '../utils/response';
 import authRoutes from './auth.route';
 import userRoutes from './user.route';
