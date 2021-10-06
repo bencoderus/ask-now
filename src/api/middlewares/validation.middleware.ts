@@ -5,10 +5,10 @@ import { extractValidationMessage } from '../../utils/string.util';
 import { validationErrorResponse } from '../../utils/response';
 
 /**
- * Handle all validation errors
+ * Handle all validations using the validation schema.
  *
- * @param schema
- * @returns void | Response
+ * @param {ObjectSchema} schema
+ * @returns {void | Response}
  */
 const validator =
   (schema: ObjectSchema) =>

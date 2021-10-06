@@ -3,6 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '../../utils/authToken';
 import { unauthorizedResponse } from '../../utils/response';
 
+/**
+ * Verify user token and return user data.
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ *
+ * @returns {void | Response}
+ */
 export default async (
   req: Request,
   res: Response,

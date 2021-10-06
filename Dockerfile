@@ -1,11 +1,11 @@
-FROM node:14.17.6-alpine
+FROM node:16.9.1-alpine
 
 WORKDIR /app
 
 COPY . .
 COPY package*.json .
 
-RUN npm i -g typescript pm2 && npm link typescript && yarn 
+RUN yarn global add typescript pm2 && yarn
 
 EXPOSE 5000
 

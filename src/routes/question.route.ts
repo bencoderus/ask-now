@@ -4,7 +4,7 @@ import authUser from '../api/middlewares/auth-user.middleware';
 import QuestionController from '../api/controllers/question.controller';
 import SubscriptionController from '../api/controllers/subscription.controller';
 import QuestionValidator from '../api/validators/questionValidator';
-import validator from '../api/middlewares/validation-handler';
+import validator from '../api/middlewares/validation.middleware';
 
 const route = express.Router();
 

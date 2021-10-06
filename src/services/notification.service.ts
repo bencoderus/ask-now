@@ -18,7 +18,10 @@ export default class NotificationService {
   public async findByUser(
     userId: string
   ): Promise<LeanDocument<NotificationInterface[]>> {
-    const user: LeanDocument<UserInterface> = await User.findById(userId)
+    const user: LeanDocument<UserInterface> = await User.findOne(
+      { _id: userId },
+      { notifications: { $slice: -40 } }
+    )
       .select('notifications')
       .lean();
 

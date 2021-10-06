@@ -1,6 +1,6 @@
 import express from 'express';
 import AuthController from '../api/controllers/auth.controller';
-import validator from '../api/middlewares/validation-handler';
+import validator from '../api/middlewares/validation.middleware';
 import asyncHandler from '../utils/asyncHandler';
 import RegisterValidator from '../api/validators/auth/registerValidator';
 import LoginValidator from '../api/validators/auth/loginValidator';

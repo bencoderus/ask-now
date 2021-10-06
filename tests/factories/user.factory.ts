@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { UserInterface } from '../../src/interfaces/models/user.interface';
 import UserService from '../../src/services/user.service';
-import HashManager from '../../src/utils/hash-manager';
+import HashManager from '../../src/utils/hash.util';
 
 export default class UserFactory {
   static async create(

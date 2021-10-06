@@ -8,7 +8,7 @@ import {
 import User from '../models/user.model';
 import AuthToken from '../utils/authToken';
 import constants from '../utils/constants';
-import HashManager from '../utils/hashManager';
+import HashManager from '../utils/hash.util';
 
 @injectable()
 export default class UserService {

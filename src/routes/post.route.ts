@@ -5,7 +5,7 @@ import authUser from '../api/middlewares/auth-user.middleware';
 import CreatePostValidator from '../api/validators/post/create-validator';
 import UpdatePostValidator from '../api/validators/post/update-validator';
 import VoteValidator from '../api/validators/voteValidator';
-import validator from '../api/middlewares/validation-handler';
+import validator from '../api/middlewares/validation.middleware';
 
 const route = express.Router();
 

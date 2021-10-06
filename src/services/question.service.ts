@@ -1,4 +1,4 @@
-import { isValidObjectId, ObjectId } from 'mongoose';
+import { FilterQuery, isValidObjectId, ObjectId } from 'mongoose';
 import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import { PostInterface } from '../interfaces/models/post.interface';
@@ -16,7 +16,9 @@ import SubscriptionService from './subscription.service';
 export default class QuestionService {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  private buildFilter(query: Record<string, any> = {}) {
+  private buildFilter(
+    query: Record<string, any> = {}
+  ): FilterQuery<QuestionInterface> {
     const filter: Record<string, any> = {};
 
     if (query.user) {
@@ -35,7 +37,7 @@ export default class QuestionService {
   public async findAll(
     query: Record<string, any> = {}
   ): Promise<Pagination<QuestionInterface>> {
-    const filtered = this.buildFilter(query);
+    const filtered: FilterQuery<QuestionInterface> = this.buildFilter(query);
     const total: number = await Question.find(filtered).countDocuments();
     const { page, limit, skip, pageCount } = paginator(total, query);
 
