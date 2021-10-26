@@ -7,7 +7,7 @@
     "build": "tsc -p .",
     "test": "cross-env NODE_ENV=testing && jest --maxWorkers=8",
     "start:prod": "cross-env NODE_ENV=production && npm run build && pm2-runtime start dist/server.js --name app",
-    "start:dev": "cross-env NODE_ENV=development && nodemon --exec ts-node --files src/server.ts",
+    "start:dev": "nodemon",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts"
   },

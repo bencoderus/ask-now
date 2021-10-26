@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
+import config from '../config';
 
-const saltRounds = 10;
+const saltRounds = config.saltRounds;
 
 export default class HashManager {
   public static hash(value: string): string {
