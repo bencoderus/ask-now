@@ -1,6 +1,6 @@
 {
   "ignore": [".git", "node_modules", "dist"],
   "watch": ["./src"],
-  "exec": "cross-env NODE_ENV=development && nodemon --exec ts-node --files src/server.ts",
+  "exec": "cross-env NODE_ENV=development nodemon --exec ts-node --files src/server.ts",
   "ext": "ts"
 }

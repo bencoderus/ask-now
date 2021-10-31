@@ -20,5 +20,5 @@ export default {
   // Redis configurations.
   redisUri: process.env.REDIS_URI || 'redis://localhost:6379',
 
-  saltRounds: process.env.SALT_ROUNDS || 10
+  saltRounds: parseInt(process.env.SALT_ROUNDS || '10')
 };

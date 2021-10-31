@@ -1,21 +1,21 @@
 import faker from 'faker';
 import { UserInterface } from '../../src/interfaces/models/user.interface';
 import UserService from '../../src/services/user.service';
-import HashManager from '../../src/utils/hash.util';
 
+export const defaultPassword: string = 'password';
 export default class UserFactory {
   static async create(
     data: Record<string, string> = {}
   ): Promise<UserInterface> {
     const service = new UserService();
-    const { firstName, lastName, username, email, password } = data;
+    const { firstName, lastName, username, email } = data;
 
     return service.createUser({
       firstName: firstName ?? faker.unique.name,
       lastName: lastName ?? faker.unique.name,
       email: email ?? faker.internet.email(),
-      username: username ?? faker.internet.userName(),
-      password: password ?? HashManager.hash('password')
+      username: username ?? faker.unique.name,
+      password: defaultPassword
     });
   }
 

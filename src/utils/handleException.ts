@@ -38,7 +38,7 @@ export default (error: any, request: Request, response: Response): Response => {
       ? { exception: error.stack }
       : null;
 
-  if (isAnException(statusCode)) logger.error(error);
+  if (isAnException(statusCode)) logger.error(error.stack || error);
 
   return sendResponse(response, statusCode, message, exception);
 };

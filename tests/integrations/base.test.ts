@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import app from '../../src/app';
-import TestService from '../../src/utils/test-service';
+import TestService from '../../src/services/test.service';
 
 const request = supertest(app);
 const testService = new TestService();

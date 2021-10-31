@@ -1,5 +1,6 @@
 import config from '../../config';
 import DatabaseInterface from '../../interfaces/database.interface';
+import logger from '../logger.util';
 import Mongo from './mongo';
 import MongoMemory from './mongoMemory';
 
@@ -19,18 +20,28 @@ export default class DatabaseFactory {
   public async connect(): Promise<void> {
     try {
       await this.DatabaseDriver.connect();
-      console.log('Database connected');
+      this.logReport('Database connected');
     } catch (error) {
-      console.error(error);
+      this.logReport(error);
     }
   }
 
   public async disconnect(): Promise<void> {
     try {
       await this.DatabaseDriver.disconnect();
-      console.log('Database disconnected');
+      this.logReport('Database disconnected');
     } catch (error) {
-      console.error(error);
+      this.logReport(error);
+    }
+  }
+
+  private logReport(log: string | any) {
+    if (log instanceof Error) {
+      return logger.error(log.stack || log);
+    }
+
+    if (config.environment !== 'test') {
+      return console.log(log);
     }
   }
 }

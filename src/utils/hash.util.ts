@@ -1,14 +1,12 @@
 import bcrypt from 'bcrypt';
 import config from '../config';
 
-const saltRounds = config.saltRounds;
+const saltRounds: number = config.saltRounds;
 
-export default class HashManager {
-  public static hash(value: string): string {
-    return bcrypt.hashSync(value, saltRounds);
-  }
+export const hash = (value: string): Promise<string> => {
+  return bcrypt.hash(value, saltRounds);
+};
 
-  public static compare(plainValue: string, hashValue: string): boolean {
-    return bcrypt.compareSync(plainValue, hashValue);
-  }
-}
+export const compare = (value: string, hash: string): Promise<boolean> => {
+  return bcrypt.compare(value, hash);
+};

@@ -8,7 +8,7 @@ import {
 import User from '../models/user.model';
 import AuthToken from '../utils/authToken';
 import constants from '../utils/constants';
-import HashManager from '../utils/hash.util';
+import { hash, compare } from '../utils/hash.util';
 
 @injectable()
 export default class UserService {
@@ -25,7 +25,7 @@ export default class UserService {
       throw new HttpException('Username already exists', 400);
     }
 
-    const hashed = HashManager.hash(data.password);
+    const hashed = await hash(data.password);
 
     return User.create({
       firstName: data.firstName,
@@ -41,8 +41,10 @@ export default class UserService {
     token: string;
   }> {
     const user = await User.findOne({ email: data.email });
+    const passwordMatches =
+      user && (await compare(data.password, user.password));
 
-    if (!(user && HashManager.compare(data.password, user.password))) {
+    if (!(user && passwordMatches)) {
       throw new HttpException(constants.invalidCredentials, 400);
     }
 

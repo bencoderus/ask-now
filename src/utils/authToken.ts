@@ -2,8 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { UserInterface } from '../interfaces/models/user.interface';
 
-const { jwtSecret } = config;
-const { jwtExpiresIn } = config;
+const { jwtSecret, jwtExpiresIn } = config;
 
 export default class AuthToken {
   public static async generateToken(payload: UserInterface): Promise<{
