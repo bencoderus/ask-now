@@ -12,49 +12,49 @@ const route = express.Router();
 route.get(
   '/questions/:questionId/posts',
   authUser,
-  asyncHandler(PostController.index.bind(PostController))
+  asyncHandler(PostController.index)
 );
 
 route.get(
   '/questions/posts/:postId',
   authUser,
-  asyncHandler(PostController.show.bind(PostController))
+  asyncHandler(PostController.show)
 );
 
 route.post(
   '/questions/:questionId/posts',
   [authUser, validator(CreatePostValidator)],
-  asyncHandler(PostController.create.bind(PostController))
+  asyncHandler(PostController.create)
 );
 
 route.patch(
   '/questions/posts/:postId',
   [authUser, validator(UpdatePostValidator)],
-  asyncHandler(PostController.update.bind(PostController))
+  asyncHandler(PostController.update)
 );
 
 route.patch(
   '/questions/posts/:postId/best-answer',
   authUser,
-  asyncHandler(PostController.markAsBestAnswer.bind(PostController))
+  asyncHandler(PostController.markAsBestAnswer)
 );
 
 route.delete(
   '/questions/posts/:postId',
   authUser,
-  asyncHandler(PostController.delete.bind(PostController))
+  asyncHandler(PostController.destroy)
 );
 
 route.post(
   '/questions/posts/:postId/vote',
   [authUser, validator(VoteValidator)],
-  asyncHandler(PostController.vote.bind(PostController))
+  asyncHandler(PostController.vote)
 );
 
 route.delete(
   '/questions/posts/:postId/vote',
   authUser,
-  asyncHandler(PostController.deleteVote.bind(PostController))
+  asyncHandler(PostController.removeVote)
 );
 
 export default route;

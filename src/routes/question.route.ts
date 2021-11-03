@@ -8,46 +8,42 @@ import validator from '../api/middlewares/validation.middleware';
 
 const route = express.Router();
 
-route.get(
-  '/questions',
-  authUser,
-  asyncHandler(QuestionController.index.bind(QuestionController))
-);
+route.get('/questions', authUser, asyncHandler(QuestionController.index));
 
 route.get(
   '/questions/:questionId',
   authUser,
-  asyncHandler(QuestionController.show.bind(QuestionController))
+  asyncHandler(QuestionController.show)
 );
 
 route.post(
   '/questions',
   [authUser, validator(QuestionValidator)],
-  asyncHandler(QuestionController.create.bind(QuestionController))
+  asyncHandler(QuestionController.create)
 );
 
 route.patch(
   '/questions/:questionId',
   [authUser, validator(QuestionValidator)],
-  asyncHandler(QuestionController.update.bind(QuestionController))
+  asyncHandler(QuestionController.update)
 );
 
 route.delete(
   '/questions/:questionId',
   authUser,
-  asyncHandler(QuestionController.delete.bind(QuestionController))
+  asyncHandler(QuestionController.destroy)
 );
 
 route.post(
   '/questions/:questionId/subscribe',
   authUser,
-  asyncHandler(SubscriptionController.subscribe.bind(SubscriptionController))
+  asyncHandler(SubscriptionController.subscribe)
 );
 
 route.post(
   '/questions/:questionId/unsubscribe',
   authUser,
-  asyncHandler(SubscriptionController.unsubscribe.bind(SubscriptionController))
+  asyncHandler(SubscriptionController.unsubscribe)
 );
 
 export default route;

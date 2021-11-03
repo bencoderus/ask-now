@@ -1,94 +1,181 @@
-import { container, injectable } from 'tsyringe';
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import PostService from '../../services/post.service';
 import VoteService from '../../services/vote.service';
 
-@injectable()
-class PostController {
-  constructor(
-    private readonly postService: PostService,
-    private readonly voteService: VoteService
-  ) {}
+const postService = container.resolve(PostService);
 
-  public async index(request: Request, response: Response): Promise<Response> {
-    const { questionId } = request.params;
+/**
+ * Get posts for a question.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const index = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { questionId } = request.params;
 
-    const post = await this.postService.findByQuestion(questionId);
+  const post = await postService.findByQuestion(questionId);
 
-    return okResponse(response, 'Posts retrieved successfully', post);
-  }
+  return okResponse(response, 'Posts retrieved successfully', post);
+};
 
-  public async show(request: Request, response: Response): Promise<Response> {
-    const { postId } = request.params;
+/**
+ * Get a post.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const show = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { postId } = request.params;
 
-    const post = await this.postService.findOne(postId);
+  const post = await postService.findOne(postId);
 
-    return okResponse(response, 'Post retrieved successfully', post);
-  }
+  return okResponse(response, 'Post retrieved successfully', post);
+};
 
-  public async create(request: Request, response: Response): Promise<Response> {
-    const { user } = request;
-    const { questionId } = request.params;
-    const data = request.body;
+/**
+ * Create a new post.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const create = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { questionId } = request.params;
+  const data = request.body;
 
-    const post = await this.postService.create(questionId, data, user);
+  const post = await postService.create(questionId, data, user);
 
-    return okResponse(response, 'Post created successfully', post);
-  }
+  return okResponse(response, 'Post created successfully', post);
+};
 
-  public async update(request: Request, response: Response): Promise<Response> {
-    const { user } = request;
-    const { postId } = request.params;
-    const data = request.body;
+/**
+ * Update a post.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const update = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { postId } = request.params;
+  const data = request.body;
 
-    const post = await this.postService.update(postId, data, user);
+  const post = await postService.update(postId, data, user);
 
-    return okResponse(response, 'Post updated successfully', post);
-  }
+  return okResponse(response, 'Post updated successfully', post);
+};
 
-  public async markAsBestAnswer(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const { user } = request;
-    const { postId } = request.params;
+/**
+ * Mark as best answer.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const markAsBestAnswer = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { postId } = request.params;
 
-    const post = await this.postService.markAsBestAnswer(postId, user);
+  const post = await postService.markAsBestAnswer(postId, user);
 
-    return okResponse(response, 'Best answer selected successfully', post);
-  }
+  return okResponse(response, 'Best answer selected successfully', post);
+};
 
-  public async delete(request: Request, response: Response): Promise<Response> {
-    const { user } = request;
-    const { postId } = request.params;
+/**
+ * Remove a post.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const destroy = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { postId } = request.params;
 
-    await this.postService.delete(postId, user);
+  await postService.delete(postId, user);
 
-    return okResponse(response, 'Post removed successfully');
-  }
+  return okResponse(response, 'Post removed successfully');
+};
 
-  public async vote(request: Request, response: Response): Promise<Response> {
-    const { user } = request;
-    const { postId } = request.params;
-    const data = request.body;
+/**
+ * Vote for a post (upvote or downvote).
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const vote = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { postId } = request.params;
+  const { vote } = request.body;
 
-    await this.voteService.vote(postId, user, data.vote);
+  const voteService = container.resolve(VoteService);
+  const post = await voteService.vote(postId, user, vote);
 
-    return okResponse(response, 'Voted successfully');
-  }
+  return okResponse(response, 'Vote registered successfully', post);
+};
 
-  public async deleteVote(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const { user } = request;
-    const { postId } = request.params;
+/**
+ * Remove vote for a post.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const removeVote = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { postId } = request.params;
 
-    await this.voteService.delete(postId, user);
+  const voteService = container.resolve(VoteService);
+  await voteService.delete(postId, user);
 
-    return okResponse(response, 'Vote removed successfully');
-  }
-}
+  return okResponse(response, 'Vote removed successfully');
+};
 
-export default container.resolve(PostController);
+export default {
+  index,
+  show,
+  create,
+  update,
+  markAsBestAnswer,
+  destroy,
+  vote,
+  removeVote
+};

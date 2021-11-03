@@ -1,46 +1,46 @@
-import { container, injectable } from 'tsyringe';
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import UserService from '../../services/user.service';
 import { createdResponse, okResponse } from '../../utils/response';
 
-@injectable()
-class AuthController {
-  constructor(private readonly userService: UserService) {}
+const userService = container.resolve(UserService);
 
-  /**
-   * Create an account.
-   *
-   * @param request
-   * @param response
-   *
-   * @returns Promise<Response>
-   */
-  public async register(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const data = request.body;
+/**
+ * Login into an account.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const login = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const data = request.body;
 
-    const userData = await this.userService.createUser(data);
+  const userData = await userService.login(data);
 
-    return createdResponse(response, 'Account created successfully', userData);
-  }
+  return okResponse(response, 'Login successful', userData);
+};
 
-  /**
-   * Login into user account.
-   *
-   * @param request
-   * @param response
-   *
-   * @returns Promise<Response>
-   */
-  public async login(request: Request, response: Response): Promise<Response> {
-    const data = request.body;
+/**
+ * Create an account.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const register = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const data = request.body;
 
-    const userData = await this.userService.login(data);
+  const userData = await userService.createUser(data);
 
-    return okResponse(response, 'Login successful', userData);
-  }
-}
+  return createdResponse(response, 'Account created successfully', userData);
+};
 
-export default container.resolve(AuthController);
+export default { login, register };

@@ -10,13 +10,13 @@ const route = express.Router();
 route.post(
   '/auth/register',
   validator(RegisterValidator),
-  asyncHandler(AuthController.register.bind(AuthController))
+  asyncHandler(AuthController.register)
 );
 
 route.post(
   '/auth/login',
   validator(LoginValidator),
-  asyncHandler(AuthController.login.bind(AuthController))
+  asyncHandler(AuthController.login)
 );
 
 export default route;

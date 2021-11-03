@@ -1,53 +1,111 @@
-import { container, injectable } from 'tsyringe';
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import QuestionService from '../../services/question.service';
 
-@injectable()
-class QuestionController {
-  constructor(private readonly questionService: QuestionService) {}
+const questionService = container.resolve(QuestionService);
 
-  public async index(request: Request, response: Response): Promise<Response> {
-    const { query } = request;
-    const questions = await this.questionService.findAll(query);
+/**
+ * Get all questions.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const index = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { query } = request;
 
-    return okResponse(response, 'Questions retrieved successfully', questions);
-  }
+  const questions = await questionService.findAll(query);
 
-  public async show(request: Request, response: Response): Promise<Response> {
-    const { questionId } = request.params;
+  return okResponse(response, 'Questions retrieved successfully', questions);
+};
 
-    const question = await this.questionService.findById(questionId);
+/**
+ * Show a question.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const show = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { questionId } = request.params;
 
-    return okResponse(response, 'Questions retrieved successfully', question);
-  }
+  const question = await questionService.findById(questionId);
 
-  public async create(request: Request, response: Response): Promise<Response> {
-    const data = request.body;
+  return okResponse(response, 'Questions retrieved successfully', question);
+};
 
-    const question = await this.questionService.create(data, request.user);
+/**
+ * Create a question.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const create = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { body, user } = request;
 
-    return okResponse(response, 'Question created successfully', question);
-  }
+  const question = await questionService.create(body, user);
 
-  public async update(request: Request, response: Response): Promise<Response> {
-    const { questionId } = request.params;
-    const data = request.body;
-    const { user } = request;
+  return okResponse(response, 'Question created successfully', question);
+};
 
-    const question = await this.questionService.update(questionId, data, user);
+/**
+ * Update a question.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const update = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { questionId } = request.params;
+  const { body, user } = request;
 
-    return okResponse(response, 'Question updated successfully', question);
-  }
+  const question = await questionService.update(questionId, body, user);
 
-  public async delete(request: Request, response: Response): Promise<Response> {
-    const { questionId } = request.params;
-    const { user } = request;
+  return okResponse(response, 'Question updated successfully', question);
+};
 
-    await this.questionService.delete(questionId, user);
+/**
+ * Delete a question.
+ *
+ * @param {Request}  request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const destroy = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { questionId } = request.params;
+  const { user } = request;
 
-    return okResponse(response, 'Question deleted successfully');
-  }
-}
+  await questionService.delete(questionId, user);
 
-export default container.resolve(QuestionController);
+  return okResponse(response, 'Question deleted successfully');
+};
+
+export default {
+  index,
+  show,
+  create,
+  update,
+  destroy
+};

@@ -5,22 +5,18 @@ import authUser from '../api/middlewares/auth-user.middleware';
 
 const route = express.Router();
 
-route.get(
-  '/user/profile',
-  authUser,
-  asyncHandler(UserController.profile.bind(UserController))
-);
+route.get('/user/profile', authUser, asyncHandler(UserController.profile));
 
 route.get(
   '/user/notifications',
   authUser,
-  asyncHandler(UserController.notification.bind(UserController))
+  asyncHandler(UserController.notification)
 );
 
 route.patch(
   '/user/notifications/:notificationId/read',
   authUser,
-  asyncHandler(UserController.markNotificationAsRead.bind(UserController))
+  asyncHandler(UserController.markNotificationAsRead)
 );
 
 export default route;

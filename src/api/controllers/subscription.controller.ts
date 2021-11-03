@@ -1,48 +1,48 @@
-import { container, injectable } from 'tsyringe';
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import SubscriptionService from '../../services/subscription.service';
 
-@injectable()
-class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+const subscriptionService = container.resolve(SubscriptionService);
 
-  /**
-   * Subscribe to a question.
-   *
-   * @param request
-   * @param response
-   *
-   * @returns Promise<Response>
-   */
-  public async subscribe(request: Request, response: Response) {
-    const { user } = request;
-    const { questionId } = request.params;
+/**
+ * Subscribe to a question.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const subscribe = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { questionId } = request.params;
 
-    const question = await this.subscriptionService.subscribe(questionId, user);
+  const question = await subscriptionService.subscribe(questionId, user);
 
-    return okResponse(response, 'Subscription added successfully', question);
-  }
+  return okResponse(response, 'Subscription added successfully', question);
+};
 
-  /**
-   * Unsubscribe from a question.
-   *
-   * @param request
-   * @param response
-   *
-   * @returns Promise<Response>
-   */
-  public async unsubscribe(request: Request, response: Response) {
-    const { user } = request;
-    const { questionId } = request.params;
+/**
+ * Unsubscribe from a question.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ *
+ * @returns {Promise<Response>}
+ */
+const unsubscribe = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { user } = request;
+  const { questionId } = request.params;
 
-    const question = await this.subscriptionService.unsubscribe(
-      questionId,
-      user
-    );
+  const question = await subscriptionService.unsubscribe(questionId, user);
 
-    return okResponse(response, 'Subscription removed successfully', question);
-  }
-}
+  return okResponse(response, 'Subscription removed successfully', question);
+};
 
-export default container.resolve(SubscriptionController);
+export default { subscribe, unsubscribe };
