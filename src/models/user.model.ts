@@ -6,11 +6,11 @@ const schemaOptions = {
     transform(doc: any, resource: any) {
       resource.id = resource._id;
       delete resource.password;
-      delete resource.notifications;
       delete resource.__v;
       delete resource._id;
     }
-  }
+  },
+  timestamps: true
 };
 
 const schema: Schema = new Schema<UserInterface>(
@@ -19,16 +19,7 @@ const schema: Schema = new Schema<UserInterface>(
     lastName: { type: String, required: true },
     username: { type: String, unique: true, required: true },
     email: { type: String, unique: true, required: true },
-    password: { type: String, required: true },
-    notifications: [
-      {
-        title: { type: String, required: true },
-        content: { type: String, required: true },
-        read: { type: Boolean, default: false },
-        createdAt: { type: Date, default: Date.now }
-      }
-    ],
-    createdAt: { type: Date, default: Date.now }
+    password: { type: String, required: true }
   },
   schemaOptions
 );

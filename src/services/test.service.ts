@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import SubscriptionNotification from '../jobs/subscription.job';
 import DatabaseFactory from '../utils/databases/factory';
 

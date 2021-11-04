@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import UserService from '../../services/user.service';
 import { createdResponse, okResponse } from '../../utils/response';
+import constants from '../../utils/constants';
 
 const userService = container.resolve(UserService);
 
@@ -21,7 +22,7 @@ const login = async (
 
   const userData = await userService.login(data);
 
-  return okResponse(response, 'Login successful', userData);
+  return okResponse(response, constants.loginSuccess, userData);
 };
 
 /**
@@ -40,7 +41,7 @@ const register = async (
 
   const userData = await userService.createUser(data);
 
-  return createdResponse(response, 'Account created successfully', userData);
+  return createdResponse(response, constants.accountCreated, userData);
 };
 
 export default { login, register };

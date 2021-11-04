@@ -17,5 +17,6 @@ export interface BaseQuestionInterface {
 export interface QuestionInterface extends Document, BaseQuestionInterface {
   subscribers: Types.DocumentArray<SubscribersInterface>;
   posts: Types.DocumentArray<PostInterface>;
-  createdAt?: Date | number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

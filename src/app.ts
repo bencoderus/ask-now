@@ -12,7 +12,7 @@ import handleException from './utils/handleException';
 const app = express();
 
 app.use(
-  morgan('combined', {
+  morgan('tiny', {
     skip: (request, response) => config.environment === 'test'
   })
 );

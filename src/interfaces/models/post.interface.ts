@@ -6,6 +6,7 @@ import { UserInterface } from './user.interface';
 export interface VoteInterface extends Types.Subdocument {
   type: vote;
   user: ObjectId;
+  createdAt?: Date;
 }
 
 export interface BasePostInterface {
@@ -19,5 +20,6 @@ export interface BasePostInterface {
 
 export interface PostInterface extends Document, BasePostInterface {
   votes: Types.DocumentArray<VoteInterface>;
-  createdAt?: Date | number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

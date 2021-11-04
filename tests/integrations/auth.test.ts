@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import app from '../../src/app';
 import { UserInterface } from '../../src/interfaces/models/user.interface';
 import TestService from '../../src/services/test.service';
+import constants from '../../src/utils/constants';
 import UserFactory, {
   defaultPassword as password
 } from '../factories/user.factory';
@@ -31,7 +32,7 @@ describe('Test registration', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.status).toBe(true);
-    expect(response.body.message).toBe('Account created successfully');
+    expect(response.body.message).toBe(constants.accountCreated);
   });
 
   test('A guest can not create an account with an existing email', async () => {
@@ -41,7 +42,7 @@ describe('Test registration', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.status).toBe(false);
-    expect(response.body.message).toBe('Email already exists');
+    expect(response.body.message).toBe(constants.emailExists);
   });
 
   test('A guest can not create an account with an existing username', async () => {
@@ -51,7 +52,7 @@ describe('Test registration', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.status).toBe(false);
-    expect(response.body.message).toBe('Username already exists');
+    expect(response.body.message).toBe(constants.usernameExists);
   });
 
   test('A guest can not create an account with an invalid email', async () => {
@@ -75,7 +76,7 @@ describe('Test login', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.status).toBe(true);
-    expect(response.body.message).toBe('Login successful');
+    expect(response.body.message).toBe(constants.loginSuccess);
     expect(response.body.data).toHaveProperty('token');
   });
 
@@ -101,6 +102,6 @@ describe('Test login', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.status).toBe(false);
-    expect(response.body.message).toBe('Invalid credentials');
+    expect(response.body.message).toBe(constants.invalidCredentials);
   });
 });

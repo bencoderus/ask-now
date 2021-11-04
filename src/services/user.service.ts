@@ -16,13 +16,13 @@ export default class UserService {
     const emailExists = await User.exists({ email: data.email });
 
     if (emailExists) {
-      throw new HttpException('Email already exists', 400);
+      throw new HttpException(constants.emailExists, 400);
     }
 
     const usernameExists = await User.exists({ username: data.username });
 
     if (usernameExists) {
-      throw new HttpException('Username already exists', 400);
+      throw new HttpException(constants.usernameExists, 400);
     }
 
     const hashed = await hash(data.password);

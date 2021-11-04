@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { okResponse } from '../../utils/response';
 import NotificationService from '../../services/notification.service';
+import { NotificationInterface } from '../../interfaces/models/notification.interface';
 
 const notificationService = container.resolve(NotificationService);
 
@@ -60,9 +61,14 @@ const markNotificationAsRead = async (
   const { user } = request;
   const { notificationId } = request.params;
 
-  await notificationService.markAsRead(notificationId, user);
+  const notification: NotificationInterface =
+    await notificationService.markAsRead(notificationId, user);
 
-  return okResponse(response, 'Notification marked as read successfully');
+  return okResponse(
+    response,
+    'Notification marked as read successfully',
+    notification
+  );
 };
 
 export default {

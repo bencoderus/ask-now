@@ -14,7 +14,8 @@ const schemaOptions = {
       delete resource.__v;
       delete resource._id;
     }
-  }
+  },
+  timestamps: true
 };
 
 const schema = new Schema<PostInterface>(
@@ -28,10 +29,10 @@ const schema = new Schema<PostInterface>(
     votes: [
       {
         type: { type: 'string', required: true },
-        user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+        user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        createdAt: { type: Date, default: Date.now }
       }
-    ],
-    createdAt: { type: Date, default: Date.now }
+    ]
   },
   schemaOptions
 );

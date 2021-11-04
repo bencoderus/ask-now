@@ -54,8 +54,8 @@ export default class PostService {
     }
 
     const bestAnswerAlreadyExists: boolean = await Post.exists({
-      question: post.question,
-      bestAnswer: true
+      question: post.question.id,
+      isBestAnswer: true
     });
 
     if (bestAnswerAlreadyExists) {

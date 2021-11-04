@@ -17,7 +17,8 @@ const schemaOptions = {
       delete resource.__v;
       delete resource._id;
     }
-  }
+  },
+  timestamps: true
 };
 
 const schema = new Schema<QuestionInterface>(

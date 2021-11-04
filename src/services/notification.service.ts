@@ -3,13 +3,11 @@ import util from 'util';
 import { isValidObjectId, LeanDocument } from 'mongoose';
 import HttpException from '../exceptions/http.exception';
 import SubscriptionNotification from '../jobs/subscription.job';
-import User from '../models/user.model';
+import Notification from '../models/notification.model';
 import constants from '../utils/constants';
 import { vote } from '../types/custom';
-import {
-  NotificationInterface,
-  UserInterface
-} from '../interfaces/models/user.interface';
+import { UserInterface } from '../interfaces/models/user.interface';
+import { NotificationInterface } from '../interfaces/models/notification.interface';
 import { QuestionInterface } from '../interfaces/models/question.interface';
 import { PostInterface } from '../interfaces/models/post.interface';
 
@@ -18,72 +16,60 @@ export default class NotificationService {
   public async findByUser(
     userId: string
   ): Promise<LeanDocument<NotificationInterface[]>> {
-    const user: LeanDocument<UserInterface> = await User.findOne(
-      { _id: userId },
-      { notifications: { $slice: -40 } }
-    )
-      .select('notifications')
-      .lean();
+    const notifications: LeanDocument<NotificationInterface[]> =
+      await Notification.find({ user: userId })
+        .sort('-createdAt')
+        .limit(40)
+        .lean();
 
-    if (!user) {
-      throw new HttpException('User not found', 404);
+    return notifications;
+  }
+
+  public async findOne(id: string, userId: string) {
+    if (!isValidObjectId(id)) {
+      throw new HttpException(constants.notificationNotFound, 404);
     }
 
-    return user.notifications;
+    const notification: NotificationInterface | null =
+      await Notification.findOne({ _id: id, user: userId });
+
+    if (!notification) {
+      throw new HttpException(constants.notificationNotFound, 404);
+    }
+
+    return notification;
   }
 
   public async markAsRead(
     notificationId: string,
     user: UserInterface
-  ): Promise<boolean> {
-    if (!isValidObjectId(notificationId)) {
-      throw new HttpException(
-        util.format(constants.notFound, 'Notification'),
-        404
-      );
-    }
+  ): Promise<NotificationInterface> {
+    const notification = await this.findOne(notificationId, user.id);
 
-    const userNotification = await User.findOne({
-      _id: user.id,
-      'notifications._id': notificationId
-    }).select('notifications');
-
-    if (!userNotification) {
-      throw new HttpException(
-        util.format(constants.notFound, 'Notification'),
-        404
-      );
-    }
-
-    await User.updateOne(
+    await Notification.updateOne(
       {
-        _id: user.id,
-        'notifications._id': notificationId
+        _id: notificationId
       },
       {
-        $set: { 'notifications.$.read': true }
+        $set: { read: true }
       }
     );
 
-    return true;
+    return notification;
   }
 
   public async notifyReceiver(
     receiverId: string,
     title: string,
     content: string
-  ): Promise<void> {
-    await User.updateOne(
-      { _id: receiverId },
-      {
-        $push: {
-          notifications: {
-            $each: [{ content, title }],
-            $sort: { createdAt: -1 }
-          }
-        }
-      }
-    );
+  ): Promise<NotificationInterface> {
+    const notification: NotificationInterface = await Notification.create({
+      title,
+      content,
+      user: receiverId
+    });
+
+    return notification;
   }
 
   public async sendVoteNotification(
