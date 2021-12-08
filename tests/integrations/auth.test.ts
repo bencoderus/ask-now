@@ -37,7 +37,7 @@ describe('Test registration', () => {
 
   test('A guest can not create an account with an existing email', async () => {
     const user: UserInterface = await UserFactory.create();
-    payload['email'] = user.email;
+    payload.email = user.email;
     const response = await request.post('/auth/register').send(payload);
 
     expect(response.status).toBe(400);
@@ -47,7 +47,7 @@ describe('Test registration', () => {
 
   test('A guest can not create an account with an existing username', async () => {
     const user: UserInterface = await UserFactory.create();
-    payload['username'] = user.username;
+    payload.username = user.username;
     const response = await request.post('/auth/register').send(payload);
 
     expect(response.status).toBe(400);
@@ -56,8 +56,8 @@ describe('Test registration', () => {
   });
 
   test('A guest can not create an account with an invalid email', async () => {
-    const user: UserInterface = await UserFactory.create();
-    payload['email'] = 'bencoderus';
+    await UserFactory.create();
+    payload.email = 'bencoderus';
     const response = await request.post('/auth/register').send(payload);
 
     expect(response.status).toBe(422);
@@ -81,7 +81,7 @@ describe('Test login', () => {
   });
 
   test('A guest can not login an account with an invalid email', async () => {
-    const user: UserInterface = await UserFactory.create();
+    await UserFactory.create();
 
     const response = await request.post('/auth/register').send({
       email: 'bencoderus',

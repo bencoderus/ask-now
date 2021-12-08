@@ -1,7 +1,7 @@
 import express from 'express';
 import PostController from '../api/controllers/post.controller';
 import asyncHandler from '../utils/asyncHandler';
-import authUser from '../api/middlewares/auth-user.middleware';
+import authUser from '../api/middlewares/auth.middleware';
 import CreatePostValidator from '../api/validators/post/create-validator';
 import UpdatePostValidator from '../api/validators/post/update-validator';
 import VoteValidator from '../api/validators/voteValidator';
@@ -48,7 +48,7 @@ route.delete(
 route.post(
   '/questions/posts/:postId/vote',
   [authUser, validator(VoteValidator)],
-  asyncHandler(PostController.vote)
+  asyncHandler(PostController.addVote)
 );
 
 route.delete(

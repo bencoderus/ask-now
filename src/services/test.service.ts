@@ -1,7 +1,9 @@
 import 'reflect-metadata';
+import { injectable } from 'tsyringe';
 import SubscriptionNotification from '../jobs/subscription.job';
 import DatabaseFactory from '../utils/databases/factory';
 
+@injectable()
 export default class TestService {
   private readonly database: DatabaseFactory;
 

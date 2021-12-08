@@ -2,7 +2,7 @@ import faker from 'faker';
 import { UserInterface } from '../../src/interfaces/models/user.interface';
 import UserService from '../../src/services/user.service';
 
-export const defaultPassword: string = 'password';
+export const defaultPassword = 'password';
 export default class UserFactory {
   static async create(
     data: Record<string, string> = {}

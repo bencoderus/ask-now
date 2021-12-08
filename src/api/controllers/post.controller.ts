@@ -134,7 +134,7 @@ const destroy = async (
  *
  * @returns {Promise<Response>}
  */
-const vote = async (
+const addVote = async (
   request: Request,
   response: Response
 ): Promise<Response> => {
@@ -176,6 +176,6 @@ export default {
   update,
   markAsBestAnswer,
   destroy,
-  vote,
+  addVote,
   removeVote
 };
