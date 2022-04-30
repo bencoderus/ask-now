@@ -17,7 +17,7 @@ services:
     environment:
       - MONGO_URI=mongodb://ask_database:27017/ask-now
       - REDIS_URI=redis://ask_redis
-      - REDIS_PORT=6379
+      - REDIS_PORT=5052
     volumes:
       - .:/app
       - node_modules:/app/node_modules
@@ -26,18 +26,19 @@ services:
     image: mongo
     restart: unless-stopped
     ports:
-      - '27017:27017'
+      - '5051:27017'
     networks:
       - ask_network
     volumes:
       - data:/data/db
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo ask_database:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo ask_database:27017/ask-now --quiet
+
   ask_redis:
     image: redis:6.2.5-alpine
     restart: unless-stopped
     ports:
-      - '6379:6379'
+      - '5052:6379'
     networks:
       - ask_network
     volumes:
