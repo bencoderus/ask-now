@@ -5,8 +5,8 @@ WORKDIR /app
 COPY . .
 COPY package*.json .
 
-RUN yarn global add typescript pm2 && yarn
+RUN yarn
 
 EXPOSE 5000
 
-CMD ["yarn", "run", "start:prod"]
+CMD ["yarn", "start"]

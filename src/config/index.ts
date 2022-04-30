@@ -18,7 +18,11 @@ export default {
     process.env.MONGO_URI || 'mongodb://localhost:270177/ask-now-test',
 
   // Redis configurations.
+  redis: {
+    host: process.env.REDIS_HOST || 'redis://localhost',
+    port: parseInt(process.env.REDIS_PORT || '6379', 10)
+  },
   redisUri: process.env.REDIS_URI || 'redis://localhost:6379',
 
-  saltRounds: parseInt(process.env.SALT_ROUNDS || '10')
+  saltRounds: parseInt(process.env.SALT_ROUNDS || '10', 10)
 };

@@ -10,7 +10,7 @@ route.get('/user/profile', authUser, asyncHandler(UserController.profile));
 route.get(
   '/user/notifications',
   authUser,
-  asyncHandler(UserController.notification)
+  asyncHandler(UserController.getAllNotifications)
 );
 
 route.patch(

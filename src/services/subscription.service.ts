@@ -85,7 +85,7 @@ export default class SubscriptionService {
   public async getAllReceivers(
     questionId: string,
     userId?: string
-  ): Promise<LeanDocument<SubscribersInterface[]>> {
+  ): Promise<any> {
     const question = await Question.findById(questionId)
       .select('subscribers')
       .lean();
@@ -99,10 +99,8 @@ export default class SubscriptionService {
     }
 
     // filter subscribers where user is not equal to userId.
-    return question.subscribers.filter(
-      (subscriber: LeanDocument<SubscribersInterface>) => {
-        return subscriber.user.toString() !== userId;
-      }
-    );
+    return question.subscribers.filter((subscriber: any) => {
+      return subscriber.user.toString() !== userId;
+    });
   }
 }

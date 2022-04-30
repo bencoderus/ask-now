@@ -7,7 +7,7 @@ import { SubscribersInterface } from '../interfaces/models/question.interface';
 import config from '../config';
 
 const SubscriptionNotification = new Bull('subscription-notification', {
-  redis: config.redisUri
+  redis: { host: config.redis.host, port: config.redis.port }
 });
 
 // Process vote notification job.

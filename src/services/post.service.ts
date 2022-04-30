@@ -1,4 +1,4 @@
-import { isValidObjectId, ObjectId } from 'mongoose';
+import { isValidObjectId, ObjectId, Document } from 'mongoose';
 import { injectable } from 'tsyringe';
 import HttpException from '../exceptions/http.exception';
 import { PostInterface } from '../interfaces/models/post.interface';
@@ -53,7 +53,10 @@ export default class PostService {
       throw new HttpException(constants.postNotFound, 404);
     }
 
-    const bestAnswerAlreadyExists: boolean = await Post.exists({
+    const bestAnswerAlreadyExists: Pick<
+      Document<PostInterface, any, any>,
+      '_id'
+    > | null = await Post.exists({
       question: post.question.id,
       isBestAnswer: true
     });

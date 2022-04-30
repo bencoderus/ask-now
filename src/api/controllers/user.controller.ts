@@ -31,7 +31,7 @@ const profile = async (
  *
  * @returns {Promise<Response>}
  */
-const notification = async (
+const getAllNotifications = async (
   request: Request,
   response: Response
 ): Promise<Response> => {
@@ -73,6 +73,6 @@ const markNotificationAsRead = async (
 
 export default {
   profile,
-  notification,
+  getAllNotifications,
   markNotificationAsRead
 };
