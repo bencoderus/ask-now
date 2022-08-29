@@ -33,7 +33,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
     "reflect-metadata": "^0.1.13",
-    "sanitize-html": "^2.5.1",
+    "sanitize-html": "^2.7.1",
     "ts-node": "^10.2.1",
     "tsyringe": "^4.6.0",
     "winston": "^3.3.3"
